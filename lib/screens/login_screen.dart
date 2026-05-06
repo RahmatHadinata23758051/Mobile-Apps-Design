@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hera/core/services/auth_service.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 const _kPrimary = Color(0xFF2E7D32);
 const _kPrimaryLight = Color(0xFF43A047);
@@ -209,7 +210,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ],
                 ),
-              ),
+              ).animate().fade(duration: 500.ms).slideY(begin: 0.05, end: 0, curve: Curves.easeOutQuad),
             ),
 
             // ── Footer ──

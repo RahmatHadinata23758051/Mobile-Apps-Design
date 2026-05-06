@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hera/screens/profile_view.dart';
 import 'package:hera/screens/monitoring_screen.dart';
 import 'package:lucide_icons/lucide_icons.dart';
@@ -482,110 +483,182 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
   }
 
+  Widget _buildDrawerItem({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+    bool isActive = false,
+    bool isDestructive = false,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: isActive ? Colors.white.withValues(alpha: 0.15) : Colors.transparent,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: ListTile(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        leading: Icon(
+          icon,
+          color: isDestructive ? Colors.red.shade300 : (isActive ? Colors.white : Colors.white70),
+          size: 24,
+        ),
+        title: Text(
+          title,
+          style: GoogleFonts.poppins(
+            color: isDestructive ? Colors.red.shade300 : (isActive ? Colors.white : Colors.white70),
+            fontSize: 15,
+            fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
+          ),
+        ),
+        onTap: onTap,
+        splashColor: Colors.white.withValues(alpha: 0.1),
+        hoverColor: Colors.white.withValues(alpha: 0.05),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF1F8F2),
       drawer: Drawer(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         child: Container(
-          color: const Color(0xFF1B5E20),
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              DrawerHeader(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Color(0xFF1B5E20),
-                      Color(0xFF2E7D32),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                ),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder:
-                            (context) =>
-                                ProfileView(username: _username, email: _email),
-                      ),
-                    );
-                  },
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 30,
-                        backgroundImage: const AssetImage(
-                          'assets/images/user.png',
-                        ),
-                        backgroundColor: Colors.grey.shade300,
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              _username ?? "Pengguna",
-                              style: GoogleFonts.poppins(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Text(
-                              _email ?? "-",
-                              style: GoogleFonts.poppins(
-                                fontSize: 12,
-                                color: Colors.white70,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              ListTile(
-                leading: const Icon(LucideIcons.flaskConical, color: Colors.white),
-                title: Text("Pengujian", style: GoogleFonts.poppins(color: Colors.white, fontSize: 15)),
-                onTap: () async {
-                  Navigator.pop(context);
-                  await Navigator.pushNamed(context, '/test_location');
-                  if (!mounted || _isDisposed) return;
-                  _loadSensorSummary(showLoader: false);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.monitor_heart, color: Colors.white),
-                title: Text("Monitoring", style: GoogleFonts.poppins(color: Colors.white, fontSize: 15)),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const MonitoringScreen()));
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.person_rounded, color: Colors.white),
-                title: Text("Profil", style: GoogleFonts.poppins(color: Colors.white, fontSize: 15)),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileView(username: _username, email: _email)));
-                },
-              ),
-              ListTile(
-                leading: const Icon(LucideIcons.logOut, color: Colors.white),
-                title: Text("Logout", style: GoogleFonts.poppins(color: Colors.white, fontSize: 15)),
-                onTap: () => _logout(),
-              ),
+          margin: const EdgeInsets.only(top: 60, bottom: 60, left: 16, right: 16),
+          decoration: BoxDecoration(
+            color: const Color(0xFF1B5E20),
+            borderRadius: BorderRadius.circular(28),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.25),
+                blurRadius: 30,
+                offset: const Offset(4, 8),
+              )
             ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(28),
+            child: Column(
+              children: [
+                DrawerHeader(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Color(0xFF2E7D32), Color(0xFF43A047)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                  ),
+                  margin: EdgeInsets.zero,
+                  padding: const EdgeInsets.all(20),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProfileView(username: _username, email: _email),
+                        ),
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(2),
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child: CircleAvatar(
+                            radius: 28,
+                            backgroundImage: const AssetImage('assets/images/user.png'),
+                            backgroundColor: Colors.grey.shade300,
+                          ),
+                        ),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                _username ?? "Pengguna",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                _email ?? "-",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 12,
+                                  color: Colors.white.withValues(alpha: 0.8),
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Expanded(
+                  child: ListView(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    children: [
+                      _buildDrawerItem(
+                        icon: LucideIcons.layoutDashboard,
+                        title: "Dashboard",
+                        isActive: true,
+                        onTap: () => Navigator.pop(context),
+                      ),
+                      _buildDrawerItem(
+                        icon: LucideIcons.flaskConical,
+                        title: "Pengujian",
+                        onTap: () async {
+                          Navigator.pop(context);
+                          await Navigator.pushNamed(context, '/test_location');
+                          if (!mounted || _isDisposed) return;
+                          _loadSensorSummary(showLoader: false);
+                        },
+                      ),
+                      _buildDrawerItem(
+                        icon: LucideIcons.activity,
+                        title: "Monitoring",
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const MonitoringScreen()));
+                        },
+                      ),
+                      _buildDrawerItem(
+                        icon: LucideIcons.user,
+                        title: "Profil",
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileView(username: _username, email: _email)));
+                        },
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                        child: Divider(color: Colors.white24, height: 1),
+                      ),
+                      _buildDrawerItem(
+                        icon: LucideIcons.logOut,
+                        title: "Logout",
+                        isDestructive: true,
+                        onTap: () => _logout(),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -613,13 +686,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(24),
                 border: Border.all(color: Colors.green.shade100),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.06),
-                    blurRadius: 12,
-                    offset: const Offset(0, 4),
+                    color: Colors.black.withValues(alpha: 0.08),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
                   ),
                 ],
               ),
@@ -729,7 +802,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   ],
                 ),
               ),
-            ),
+            ).animate(delay: 200.ms).fade(duration: 500.ms).slideY(begin: 0.05, end: 0, curve: Curves.easeOutQuad),
             const SizedBox(height: 20),
             Container(
               decoration: BoxDecoration(
@@ -1307,39 +1380,51 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     Color color,
   ) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 4),
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: color.withValues(alpha: 0.18)),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.15),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+        border: Border.all(color: color.withValues(alpha: 0.1), width: 1.5),
       ),
       child: Column(
         children: [
           Container(
-            width: 40,
-            height: 40,
+            width: 48,
+            height: 48,
             decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.12),
+              gradient: LinearGradient(
+                colors: [color.withValues(alpha: 0.2), color.withValues(alpha: 0.05)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, color: color, size: 22),
+            child: Icon(icon, color: color, size: 24),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           Text(
             count,
             style: GoogleFonts.poppins(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+              fontSize: 22,
+              fontWeight: FontWeight.w800,
               color: color,
             ),
           ),
-          const SizedBox(height: 3),
+          const SizedBox(height: 4),
           Text(
             title,
             style: GoogleFonts.poppins(
-              fontSize: 10,
+              fontSize: 11,
               fontWeight: FontWeight.w600,
               color: const Color(0xFF6B7280),
+              letterSpacing: 0.5,
             ),
             textAlign: TextAlign.center,
             maxLines: 1,

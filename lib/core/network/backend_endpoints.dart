@@ -2,7 +2,7 @@ class BackendEndpoints {
   // Set API_BASE_URL via --dart-define or --dart-define-from-file=.env.
   static const String apiBaseUrl = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'http://localhost:8000',
+    defaultValue: 'http://103.217.145.187',
   );
 
   static const String wsBaseUrl = String.fromEnvironment(
