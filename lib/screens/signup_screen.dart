@@ -114,17 +114,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 borderRadius: BorderRadius.only(bottomLeft: Radius.circular(32), bottomRight: Radius.circular(32)),
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                    decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(6)),
-                    child: Text('HERA', style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w700, color: Colors.white, letterSpacing: 2)),
+                  Text(
+                    'Buat Akun Baru',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white, height: 1.25),
                   ),
-                  const SizedBox(height: 14),
-                  Text('Buat Akun\nBaru 🌱', style: GoogleFonts.poppins(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white, height: 1.25)),
-                  const SizedBox(height: 6),
-                  Text('Daftar untuk mulai menggunakan HERA Monitoring', style: GoogleFonts.poppins(fontSize: 13, color: Colors.white.withValues(alpha: 0.85))),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Daftar untuk mulai menggunakan\nHERA Monitoring',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.poppins(fontSize: 13, color: Colors.white.withValues(alpha: 0.85)),
+                  ),
                 ],
               ),
             ),
@@ -150,7 +151,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Text('Registrasi Akun', style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold, color: _kPrimary)),
+                            Center(
+                              child: Image.asset('assets/images/unhas-logo.png', height: 60),
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              'Registrasi Akun',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold, color: _kPrimary),
+                            ),
                             const SizedBox(height: 20),
 
                             // Username

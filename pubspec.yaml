@@ -25,7 +25,6 @@ dependencies:
   flutter_secure_storage: ^10.0.0
   pusher_channels_flutter: ^2.6.0
   safe_device: ^1.3.8
- 
 
 dev_dependencies:
   flutter_test:
@@ -39,3 +38,4 @@ flutter:
 
   assets:
     - assets/images/user.png
+    - assets/images/unhas-logo.png

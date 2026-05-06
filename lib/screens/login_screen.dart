@@ -104,19 +104,18 @@ class _LoginScreenState extends State<LoginScreen> {
                 borderRadius: BorderRadius.only(bottomLeft: Radius.circular(32), bottomRight: Radius.circular(32)),
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                    decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(6)),
-                    child: Text('HERA', style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w700, color: Colors.white, letterSpacing: 2)),
+                  Text(
+                    'Selamat Datang Kembali',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white, height: 1.25),
                   ),
-                  const SizedBox(height: 16),
-                  Text('Selamat\nDatang Kembali 👋',
-                      style: GoogleFonts.poppins(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white, height: 1.25)),
-                  const SizedBox(height: 6),
-                  Text('Masuk untuk melanjutkan ke dashboard monitoring',
-                      style: GoogleFonts.poppins(fontSize: 13, color: Colors.white.withValues(alpha: 0.85))),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Masuk untuk melanjutkan ke dashboard\nmonitoring',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.poppins(fontSize: 13, color: Colors.white.withValues(alpha: 0.85)),
+                  ),
                 ],
               ),
             ),
@@ -141,8 +140,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Text('Login Akun', style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold, color: _kPrimary)),
-                            const SizedBox(height: 20),
+                            Center(
+                              child: Image.asset('assets/images/unhas-logo.png', height: 60),
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              'Login Akun',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold, color: _kPrimary),
+                            ),
+                            const SizedBox(height: 24),
                             TextFormField(
                               controller: _emailController,
                               keyboardType: TextInputType.emailAddress,
