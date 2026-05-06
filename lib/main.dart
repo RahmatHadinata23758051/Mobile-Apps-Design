@@ -42,10 +42,10 @@ class MyApp extends StatelessWidget {
             TargetPlatform.windows: FadeUpwardsPageTransitionsBuilder(),
           },
         ),
-        cardTheme: CardTheme(
+        cardTheme: const CardThemeData(
           elevation: 8,
-          shadowColor: Colors.black.withValues(alpha: 0.08),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shadowColor: Color(0x14000000), // Colors.black.withValues(alpha: 0.08)
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
           color: Colors.white,
         ),
         appBarTheme: AppBarTheme(
