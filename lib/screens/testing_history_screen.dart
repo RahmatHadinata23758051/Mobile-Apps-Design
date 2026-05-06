@@ -4,6 +4,7 @@ import 'package:hera/core/services/test_service.dart';
 import 'package:hera/core/services/auth_service.dart';
 import 'package:intl/intl.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 const _kPrimary = Color(0xFF2E7D32);
 const _kBackground = Color(0xFFF1F8F2);
@@ -235,7 +236,7 @@ class _TestingHistoryScreenState extends State<TestingHistoryScreen> {
           ),
         ],
       ),
-    );
+    ).animate().fade(duration: 400.ms).slideY(begin: 0.1, end: 0, curve: Curves.easeOut);
   }
 
   Widget _buildGridItem(String label, String value, MaterialColor color) {

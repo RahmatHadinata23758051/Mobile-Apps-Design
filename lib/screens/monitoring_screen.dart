@@ -6,6 +6,8 @@ import 'package:hera/core/models/sensor_reading.dart';
 import 'package:hera/core/services/auth_service.dart';
 import 'package:hera/core/services/realtime_service.dart';
 import 'package:hera/core/services/sensor_service.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 const _kPrimary = Color(0xFF2E7D32);
 const _kBackground = Color(0xFFF1F8F2);
@@ -174,14 +176,14 @@ class _MonitoringScreenState extends State<MonitoringScreen>
 
     final r = _latestReading!;
     final items = <_SensorItem>[
-      _SensorItem(label: 'EC', value: _formatNumber(r.ec), unit: 'mS/cm', icon: Icons.electric_bolt_rounded, color: Colors.amber.shade700),
-      _SensorItem(label: 'TDS', value: _formatNumber(r.tds), unit: 'ppm', icon: Icons.water_drop_rounded, color: Colors.blue.shade600),
-      _SensorItem(label: 'pH', value: _formatNumber(r.ph), unit: '', icon: Icons.science_rounded, color: Colors.indigo.shade600),
-      _SensorItem(label: 'Suhu Air', value: _formatNumber(r.suhuAir), unit: '°C', icon: Icons.thermostat_rounded, color: Colors.cyan.shade600),
-      _SensorItem(label: 'Suhu Ling.', value: _formatNumber(r.suhuLingkungan), unit: '°C', icon: Icons.wb_sunny_rounded, color: Colors.orange.shade600),
-      _SensorItem(label: 'Kelembapan', value: _formatNumber(r.kelembapan), unit: '%', icon: Icons.water_outlined, color: Colors.teal.shade600),
-      _SensorItem(label: 'Tegangan', value: _formatNumber(r.tegangan), unit: 'V', icon: Icons.power_rounded, color: Colors.purple.shade600),
-      _SensorItem(label: 'CR Est.', value: _formatNumber(r.crEstimated), unit: 'ml/l', icon: Icons.analytics_rounded, color: _kPrimary),
+      _SensorItem(label: 'EC', value: _formatNumber(r.ec), unit: 'mS/cm', icon: LucideIcons.zap, color: Colors.amber.shade700),
+      _SensorItem(label: 'TDS', value: _formatNumber(r.tds), unit: 'ppm', icon: LucideIcons.droplet, color: Colors.blue.shade600),
+      _SensorItem(label: 'pH', value: _formatNumber(r.ph), unit: '', icon: LucideIcons.flaskConical, color: Colors.indigo.shade600),
+      _SensorItem(label: 'Suhu Air', value: _formatNumber(r.suhuAir), unit: '°C', icon: LucideIcons.thermometer, color: Colors.cyan.shade600),
+      _SensorItem(label: 'Suhu Ling.', value: _formatNumber(r.suhuLingkungan), unit: '°C', icon: LucideIcons.sun, color: Colors.orange.shade600),
+      _SensorItem(label: 'Kelembapan', value: _formatNumber(r.kelembapan), unit: '%', icon: LucideIcons.cloudRain, color: Colors.teal.shade600),
+      _SensorItem(label: 'Tegangan', value: _formatNumber(r.tegangan), unit: 'V', icon: LucideIcons.battery, color: Colors.purple.shade600),
+      _SensorItem(label: 'CR Est.', value: _formatNumber(r.crEstimated), unit: 'ml/l', icon: LucideIcons.activity, color: _kPrimary),
     ];
 
     return Column(
@@ -227,10 +229,10 @@ class _MonitoringScreenState extends State<MonitoringScreen>
               final item = items[index];
               return Container(
                 decoration: BoxDecoration(
-                  color: _kSurface,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border(left: BorderSide(color: item.color, width: 4)),
-                  boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 12, offset: const Offset(0, 4))],
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: item.color.withValues(alpha: 0.15), width: 1.5),
+                  boxShadow: [BoxShadow(color: item.color.withValues(alpha: 0.1), blurRadius: 15, offset: const Offset(0, 6))],
                 ),
                 padding: const EdgeInsets.all(14),
                 child: Column(
@@ -239,12 +241,21 @@ class _MonitoringScreenState extends State<MonitoringScreen>
                   children: [
                     Row(
                       children: [
-                        Icon(item.icon, color: item.color, size: 18),
-                        const SizedBox(width: 6),
-                        Text(item.label, style: GoogleFonts.poppins(fontSize: 12, color: _kTextSecondary)),
+                        Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: item.color.withValues(alpha: 0.1),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(item.icon, color: item.color, size: 16),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(item.label, style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w600, color: _kTextSecondary), overflow: TextOverflow.ellipsis),
+                        ),
                       ],
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 12),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
@@ -260,7 +271,7 @@ class _MonitoringScreenState extends State<MonitoringScreen>
                     ),
                   ],
                 ),
-              );
+              ).animate(delay: (index * 50).ms).fade(duration: 400.ms).scale(begin: const Offset(0.95, 0.95), curve: Curves.easeOut);
             },
           ),
         ),

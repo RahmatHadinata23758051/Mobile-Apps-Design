@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hera/core/services/auth_service.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 const _kPrimary = Color(0xFF2E7D32);
 const _kBackground = Color(0xFFF1F8F2);
@@ -160,26 +162,18 @@ class _ProfileViewState extends State<ProfileView> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // Profile Info Card
-                Container(
-                  decoration: BoxDecoration(
-                    color: _kSurface,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 16, offset: const Offset(0, 4))],
-                  ),
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('INFORMASI AKUN', style: GoogleFonts.poppins(fontSize: 11, fontWeight: FontWeight.w700, color: _kTextSecondary, letterSpacing: 1.0)),
-                      const SizedBox(height: 16),
-                      _buildProfileItem(Icons.person_rounded, "Nama Lengkap", _displayName),
-                      _buildDivider(),
-                      _buildProfileItem(Icons.email_rounded, "Email", _displayEmail),
-                      _buildDivider(),
-                      _buildProfileItem(Icons.work_rounded, "Pekerjaan", _displayRole),
-                    ],
-                  ),
-                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8, bottom: 12),
+                      child: Text('INFORMASI AKUN', style: GoogleFonts.poppins(fontSize: 11, fontWeight: FontWeight.w700, color: _kTextSecondary, letterSpacing: 1.0)),
+                    ),
+                    _buildProfileItem(LucideIcons.user, "Nama Lengkap", _displayName),
+                    _buildProfileItem(LucideIcons.mail, "Email", _displayEmail),
+                    _buildProfileItem(LucideIcons.briefcase, "Pekerjaan", _displayRole),
+                  ],
+                ).animate(delay: 100.ms).fade(duration: 400.ms).slideY(begin: 0.1, end: 0, curve: Curves.easeOut),
 
                 const SizedBox(height: 20),
 
@@ -438,21 +432,28 @@ class _ProfileViewState extends State<ProfileView> {
   }
 
   Widget _buildProfileItem(IconData icon, String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 14),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 10, offset: const Offset(0, 4))],
+        border: Border.all(color: Colors.green.shade50, width: 1.5),
+      ),
       child: Row(
         children: [
           Container(
-            width: 40, height: 40,
-            decoration: BoxDecoration(color: Colors.green.shade50, borderRadius: BorderRadius.circular(10)),
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(color: Colors.green.shade50, borderRadius: BorderRadius.circular(12)),
             child: Icon(icon, color: _kPrimary, size: 20),
           ),
-          const SizedBox(width: 14),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label, style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w500, color: _kTextSecondary)),
+                Text(label, style: GoogleFonts.poppins(fontSize: 11, fontWeight: FontWeight.w500, color: _kTextSecondary)),
                 const SizedBox(height: 2),
                 Text(value, maxLines: 2, overflow: TextOverflow.ellipsis, style: GoogleFonts.poppins(fontSize: 15, fontWeight: FontWeight.w600, color: const Color(0xFF1A1A1A))),
               ],

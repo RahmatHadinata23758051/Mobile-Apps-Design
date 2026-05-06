@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hera/core/services/auth_service.dart';
-import 'package:hera/core/models/validation_api_exception.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 const _kPrimary = Color(0xFF2E7D32);
