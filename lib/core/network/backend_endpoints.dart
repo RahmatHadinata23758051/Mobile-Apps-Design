@@ -2,17 +2,17 @@ class BackendEndpoints {
   // Set API_BASE_URL via --dart-define or --dart-define-from-file=.env.
   static const String apiBaseUrl = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'http://103.217.145.187',
+    defaultValue: 'https://103.217.145.187',
   );
 
   static const String wsBaseUrl = String.fromEnvironment(
     'WS_BASE_URL',
-    defaultValue: apiBaseUrl,
+    defaultValue: 'http://103.217.145.187:8080',
   );
 
   static const String wsAppKey = String.fromEnvironment(
     'WS_APP_KEY',
-    defaultValue: 'app-key',
+    defaultValue: 'hera-key',
   );
 
   static const String wsAppCluster = String.fromEnvironment(

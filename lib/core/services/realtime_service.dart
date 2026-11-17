@@ -66,7 +66,12 @@ class RealtimeService {
   }
 
   Future<void> _ensureConnected() async {
-    if (_connected || _connecting) return;
+    if (_connected) {
+      // Re-emit so new listeners pick up the current state.
+      _connectionController.add(true);
+      return;
+    }
+    if (_connecting) return;
     _connecting = true;
 
     try {

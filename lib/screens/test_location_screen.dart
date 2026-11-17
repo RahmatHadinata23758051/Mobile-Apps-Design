@@ -282,7 +282,8 @@ class _TestLocationScreenState extends State<TestLocationScreen> {
                           _buildSensorCard("Kelembapan", _latestReading!.kelembapan?.toStringAsFixed(1) ?? "-", "%", width: itemWidth, scale: scale),
                           _buildSensorCard("EC", _latestReading!.ec?.toStringAsFixed(2) ?? "-", "mS", width: itemWidth, scale: scale),
                           _buildSensorCard("Tegangan", _latestReading!.tegangan?.toStringAsFixed(2) ?? "-", "V", width: itemWidth, scale: scale),
-                          _buildSensorCard("CR Est.", _latestReading!.crEstimated?.toStringAsFixed(2) ?? "-", "ml/l", width: itemWidth, scale: scale),
+                          _buildSensorCard("Cr(VI) Est.", _latestReading!.crEstimated?.toStringAsFixed(3) ?? "-", "µg/L", width: itemWidth, scale: scale),
+                          _buildSensorCard("Ni Est.", _latestReading!.niEstimated?.toStringAsFixed(3) ?? "-", "µg/L", width: itemWidth, scale: scale),
                         ],
                       ),
                     );

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hera/core/services/auth_service.dart';
+import 'package:hera/core/services/app_update_service.dart';
+import 'package:hera/core/widgets/app_update_dialog.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:lucide_icons/lucide_icons.dart';
 
 const _kPrimary = Color(0xFF2E7D32);
 const _kBackground = Color(0xFFF1F8F2);
@@ -21,6 +23,7 @@ class ProfileView extends StatefulWidget {
 
 class _ProfileViewState extends State<ProfileView> {
   final AuthService _authService = AuthService();
+  final AppUpdateService _updateService = AppUpdateService();
 
   bool _isLoading = true;
   String? _errorMessage;
@@ -28,11 +31,64 @@ class _ProfileViewState extends State<ProfileView> {
   bool _isUpdateProfileAvailable = true;
   bool _isChangePasswordAvailable = true;
   String? _profileFeatureNotice;
+  bool _isCheckingUpdate = false;
+  String _installedVersion = '2.0.0';
+  String _installedBuild = '1';
 
   @override
   void initState() {
     super.initState();
     _fetchProfile();
+    _loadAppVersion();
+  }
+
+  Future<void> _loadAppVersion() async {
+    try {
+      final info = await PackageInfo.fromPlatform();
+      if (mounted) {
+        setState(() {
+          _installedVersion = info.version;
+          _installedBuild = info.buildNumber;
+        });
+      }
+    } catch (_) {}
+  }
+
+  Future<void> _checkAppUpdate() async {
+    setState(() => _isCheckingUpdate = true);
+    try {
+      final updateInfo = await _updateService.checkForUpdate();
+      if (!mounted) return;
+      setState(() => _isCheckingUpdate = false);
+
+      if (updateInfo == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Gagal terhubung ke server update. Pastikan koneksi internet aktif.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+
+      if (updateInfo.updateAvailable) {
+        await AppUpdateDialog.show(context, updateInfo: updateInfo, updateService: _updateService);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Aplikasi sudah versi terbaru (v${updateInfo.currentVersion}).'),
+            backgroundColor: _kPrimary,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isCheckingUpdate = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Terjadi kesalahan: $e'), backgroundColor: Colors.red),
+        );
+      }
+    }
   }
 
   Future<void> _fetchProfile() async {
@@ -137,7 +193,7 @@ class _ProfileViewState extends State<ProfileView> {
                   ),
                   child: ClipOval(
                     child: Image.asset('assets/images/user.png', fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Center(child: Text(initials, style: GoogleFonts.poppins(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white))),
+                      errorBuilder: (context, error, stackTrace) => Center(child: Text(initials, style: GoogleFonts.poppins(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white))),
                     ),
                   ),
                 ),
@@ -169,9 +225,9 @@ class _ProfileViewState extends State<ProfileView> {
                       padding: const EdgeInsets.only(left: 8, bottom: 12),
                       child: Text('INFORMASI AKUN', style: GoogleFonts.poppins(fontSize: 11, fontWeight: FontWeight.w700, color: _kTextSecondary, letterSpacing: 1.0)),
                     ),
-                    _buildProfileItem(LucideIcons.user, "Nama Lengkap", _displayName),
-                    _buildProfileItem(LucideIcons.mail, "Email", _displayEmail),
-                    _buildProfileItem(LucideIcons.briefcase, "Pekerjaan", _displayRole),
+                    _buildProfileItem(Icons.person_outline, "Nama Lengkap", _displayName),
+                    _buildProfileItem(Icons.email_outlined, "Email", _displayEmail),
+                    _buildProfileItem(Icons.work_outline, "Pekerjaan", _displayRole),
                   ],
                 ).animate(delay: 100.ms).fade(duration: 400.ms).slideY(begin: 0.1, end: 0, curve: Curves.easeOut),
 
@@ -215,6 +271,80 @@ class _ProfileViewState extends State<ProfileView> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 16),
+
+                // App Version & Update Card
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF8FAFC),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: const Color(0xFFE2E8F0)),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: _kPrimary.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: const Icon(Icons.system_update_rounded, color: _kPrimary, size: 20),
+                              ),
+                              const SizedBox(width: 12),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Versi Aplikasi',
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13,
+                                      color: const Color(0xFF1E293B),
+                                    ),
+                                  ),
+                                  Text(
+                                    'v$_installedVersion (Build $_installedBuild)',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 12,
+                                      color: _kTextSecondary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          _isCheckingUpdate
+                              ? const SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(strokeWidth: 2, color: _kPrimary),
+                                )
+                              : TextButton.icon(
+                                  onPressed: _checkAppUpdate,
+                                  icon: const Icon(Icons.refresh_rounded, size: 16),
+                                  label: Text(
+                                    'Cek Update',
+                                    style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.bold),
+                                  ),
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: _kPrimary,
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                    backgroundColor: _kPrimary.withValues(alpha: 0.08),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                  ),
+                                ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
 
                 if (_profileFeatureNotice != null) ...[
                   const SizedBox(height: 16),
@@ -227,8 +357,6 @@ class _ProfileViewState extends State<ProfileView> {
       ),
     );
   }
-
-  Widget _buildDivider() => Divider(height: 1, color: Colors.grey.shade100);
 
   Future<void> _showEditProfileDialog() async {
     final nameController = TextEditingController(text: _displayName);
@@ -245,7 +373,7 @@ class _ProfileViewState extends State<ProfileView> {
       builder: (sheetContext) {
         return StatefulBuilder(
           builder: (modalContext, setModalState) {
-            final fieldDeco = (String label, IconData icon) => InputDecoration(
+            InputDecoration fieldDeco(String label, IconData icon) => InputDecoration(
               labelText: label,
               labelStyle: GoogleFonts.poppins(color: _kTextSecondary, fontSize: 14),
               prefixIcon: Icon(icon, color: _kPrimary),
@@ -342,7 +470,7 @@ class _ProfileViewState extends State<ProfileView> {
       builder: (sheetContext) {
         return StatefulBuilder(
           builder: (modalContext, setModalState) {
-            final fieldDeco = (String label, bool obscure, VoidCallback toggle) => InputDecoration(
+            InputDecoration fieldDeco(String label, bool obscure, VoidCallback toggle) => InputDecoration(
               labelText: label,
               labelStyle: GoogleFonts.poppins(color: _kTextSecondary, fontSize: 14),
               prefixIcon: const Icon(Icons.lock_outlined, color: _kPrimary),

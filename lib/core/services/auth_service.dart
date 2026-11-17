@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:hera/core/network/api_client.dart';
 import 'package:hera/core/network/backend_endpoints.dart';
 import 'package:hera/core/network/api_response.dart';
-import 'package:hera/core/network/auth_interceptor.dart';
 import 'package:hera/core/network/auth_storage.dart';
 
 class ApiException implements Exception {
@@ -79,17 +79,7 @@ class AuthService {
       _authStorage = authStorage ?? const AuthStorage();
 
   static Dio _createAuthDio() {
-    final options = BaseOptions(
-      baseUrl: _authBaseUrl,
-      connectTimeout: const Duration(seconds: 20),
-      receiveTimeout: const Duration(seconds: 20),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    );
-
-    return Dio(options)..interceptors.add(AuthInterceptor(const AuthStorage()));
+    return ApiClient.createDio(_authBaseUrl);
   }
 
   Future<LoginResult> login({

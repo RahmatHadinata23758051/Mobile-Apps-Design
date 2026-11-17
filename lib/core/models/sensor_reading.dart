@@ -8,6 +8,7 @@ class SensorReading {
   final double? kelembapan;
   final double? tegangan;
   final double? crEstimated;
+  final double? niEstimated;
   final String status;
   final DateTime? createdAt;
 
@@ -21,6 +22,7 @@ class SensorReading {
     this.kelembapan,
     this.tegangan,
     this.crEstimated,
+    this.niEstimated,
     required this.status,
     this.createdAt,
   });
@@ -36,9 +38,27 @@ class SensorReading {
       kelembapan: _toDouble(json['kelembapan']),
       tegangan: _toDouble(json['tegangan']),
       crEstimated: _toDouble(json['cr_estimated']),
+      niEstimated: _toDouble(json['ni_estimated']),
       status: (json['status'] ?? 'unknown').toString(),
       createdAt: _toDateTime(json['created_at'] ?? json['timestamp']),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'ec': ec,
+      'tds': tds,
+      'ph': ph,
+      'suhu_air': suhuAir,
+      'suhu_lingkungan': suhuLingkungan,
+      'kelembapan': kelembapan,
+      'tegangan': tegangan,
+      'cr_estimated': crEstimated,
+      'ni_estimated': niEstimated,
+      'status': status,
+      'created_at': createdAt?.toIso8601String(),
+    };
   }
 
   static int? _toInt(dynamic value) {

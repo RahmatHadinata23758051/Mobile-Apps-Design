@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hera/core/services/test_service.dart';
 import 'package:hera/core/services/auth_service.dart';
 import 'package:intl/intl.dart';
-import 'package:lucide_icons/lucide_icons.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 const _kPrimary = Color(0xFF2E7D32);
@@ -148,10 +147,12 @@ class _TestingHistoryScreenState extends State<TestingHistoryScreen> {
   }
 
   Widget _buildTestCard(dynamic item) {
-    final petugas = item['petugas'] ?? 'Petugas Lapangan';
+    final petugas = item['user']?['name']?.toString() ?? item['petugas']?.toString() ?? 'Petugas Lapangan';
     final lat = item['latitude'];
     final lng = item['longitude'];
     final altitude = item['altitude'];
+    final crVal = item['cr_estimated'];
+    final niVal = item['ni_estimated'];
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -201,7 +202,7 @@ class _TestingHistoryScreenState extends State<TestingHistoryScreen> {
                   decoration: BoxDecoration(color: Colors.green.shade50, borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.green.shade100)),
                   child: Row(
                     children: [
-                      Icon(LucideIcons.mapPin, size: 16, color: Colors.red.shade500),
+                      Icon(Icons.location_on_outlined, size: 16, color: Colors.red.shade500),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
@@ -213,22 +214,78 @@ class _TestingHistoryScreenState extends State<TestingHistoryScreen> {
                   ),
                 ),
                 const SizedBox(height: 14),
-                Text('DETAIL PENGUKURAN SENSOR', style: GoogleFonts.poppins(fontSize: 10, fontWeight: FontWeight.w700, color: _kTextSecondary, letterSpacing: 1.0)),
-                const SizedBox(height: 10),
+
+                // Heavy Metals Predictions (Cr & Ni)
+                Text('ESTIMASI LOGAM BERAT (AI)', style: GoogleFonts.poppins(fontSize: 10, fontWeight: FontWeight.w700, color: _kTextSecondary, letterSpacing: 0.8)),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    // Cr(VI) Card
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFE8F5EE),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: _kPrimary.withValues(alpha: 0.2)),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Cr(VI) Est.', style: GoogleFonts.poppins(fontSize: 10, fontWeight: FontWeight.w600, color: _kPrimary)),
+                            const SizedBox(height: 2),
+                            Text(
+                              crVal != null ? '${_formatVal(crVal)} µg/L' : '-',
+                              style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.bold, color: _kPrimary),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    // Ni Card
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFEEF2FF),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: const Color(0xFF4338CA).withValues(alpha: 0.2)),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Ni Est.', style: GoogleFonts.poppins(fontSize: 10, fontWeight: FontWeight.w600, color: const Color(0xFF4338CA))),
+                            const SizedBox(height: 2),
+                            Text(
+                              niVal != null ? '${_formatVal(niVal)} µg/L' : '-',
+                              style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.bold, color: const Color(0xFF4338CA)),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 14),
+
+                // Physical Sensors Grid
+                Text('DETAIL PENGUKURAN SENSOR', style: GoogleFonts.poppins(fontSize: 10, fontWeight: FontWeight.w700, color: _kTextSecondary, letterSpacing: 0.8)),
+                const SizedBox(height: 8),
                 GridView.count(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   crossAxisCount: 3,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 8,
+                  crossAxisSpacing: 8,
                   childAspectRatio: 2.2,
                   children: [
                     _buildGridItem('pH', _formatVal(item['ph']), Colors.indigo),
-                    _buildGridItem('TDS', _formatVal(item['tds']), Colors.teal),
-                    _buildGridItem('EC', _formatVal(item['ec']), Colors.blueGrey),
-                    _buildGridItem('SuAt', _formatVal(item['suhu_air']), Colors.blue),
-                    _buildGridItem('Hum', _formatVal(item['kelembapan']), Colors.cyan),
-                    _buildGridItem('CR Est', _formatVal(item['cr_estimated']), Colors.deepOrange),
+                    _buildGridItem('TDS', '${_formatVal(item['tds'])} ppm', Colors.teal),
+                    _buildGridItem('EC', '${_formatVal(item['ec'])} mS', Colors.blueGrey),
+                    _buildGridItem('Suhu Air', '${_formatVal(item['suhu_air'])}°C', Colors.blue),
+                    _buildGridItem('Suhu Udara', '${_formatVal(item['suhu_lingkungan'])}°C', Colors.orange),
+                    _buildGridItem('Kelembapan', '${_formatVal(item['kelembapan'])}%', Colors.cyan),
                   ],
                 ),
               ],
@@ -244,7 +301,7 @@ class _TestingHistoryScreenState extends State<TestingHistoryScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label, style: GoogleFonts.poppins(fontSize: 10, color: _kTextSecondary, fontWeight: FontWeight.w500)),
-        Text(value, style: GoogleFonts.poppins(fontSize: 13, color: color.shade700, fontWeight: FontWeight.bold)),
+        Text(value, style: GoogleFonts.poppins(fontSize: 12, color: color.shade700, fontWeight: FontWeight.bold), overflow: TextOverflow.ellipsis),
       ],
     );
   }
@@ -254,7 +311,7 @@ class _TestingHistoryScreenState extends State<TestingHistoryScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(LucideIcons.flaskConical, size: 64, color: Colors.grey.shade300),
+          Icon(Icons.science_outlined, size: 64, color: Colors.grey.shade300),
           const SizedBox(height: 16),
           Text('Belum ada data pengujian.', style: GoogleFonts.poppins(fontSize: 16, color: _kTextSecondary)),
         ],
@@ -269,7 +326,7 @@ class _TestingHistoryScreenState extends State<TestingHistoryScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(LucideIcons.alertCircle, size: 64, color: Colors.red.shade300),
+            Icon(Icons.error_outline, size: 64, color: Colors.red.shade300),
             const SizedBox(height: 16),
             Text(_error ?? 'Terjadi kesalahan.', textAlign: TextAlign.center, style: GoogleFonts.poppins(fontSize: 14, color: _kTextSecondary)),
             const SizedBox(height: 24),
@@ -289,7 +346,7 @@ class _TestingHistoryScreenState extends State<TestingHistoryScreen> {
       padding: const EdgeInsets.all(24),
       child: TextButton.icon(
         onPressed: _loadMore,
-        icon: const Icon(LucideIcons.refreshCw, size: 16, color: _kPrimary),
+        icon: const Icon(Icons.refresh, size: 16, color: _kPrimary),
         label: Text('Gagal memuat lebih banyak. Klik untuk ulangi.', style: GoogleFonts.poppins(color: _kPrimary)),
       ),
     );

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hera/screens/profile_view.dart';
 import 'package:hera/screens/monitoring_screen.dart';
-import 'package:lucide_icons/lucide_icons.dart';
 import 'package:intl/intl.dart';
 import 'dart:async';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,6 +16,8 @@ import 'package:hera/core/services/location_security_service.dart';
 import 'package:hera/core/services/sensor_service.dart';
 import 'package:hera/core/services/test_service.dart';
 import 'package:hera/core/services/realtime_service.dart';
+import 'package:hera/core/services/app_update_service.dart';
+import 'package:hera/core/widgets/app_update_dialog.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -43,6 +44,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   final TestService _testService = TestService();
   final LocationSecurityService _locationSecurityService =
       LocationSecurityService();
+  final AppUpdateService _appUpdateService = AppUpdateService();
   bool _isLoadingApiSummary = false;
   bool _isLoggingOut = false;
   Timer? _summaryRefreshTimer;
@@ -87,6 +89,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       // Load user data from storage and backend
       await _loadUserProfile();
       await _loadSensorSummary();
+      _checkUpdateSilently();
     });
 
     _initRealtime();
@@ -99,6 +102,18 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       if (!mounted || _isDisposed) return;
       _loadSensorSummary(showLoader: false);
     });
+  }
+
+  Future<void> _checkUpdateSilently() async {
+    try {
+      final info = await _appUpdateService.checkForUpdate();
+      if (!mounted || _isDisposed) return;
+      if (info != null && info.updateAvailable) {
+        await AppUpdateDialog.show(context, updateInfo: info, updateService: _appUpdateService);
+      }
+    } catch (e) {
+      debugPrint('[HomeScreen] Update check error: $e');
+    }
   }
 
   Future<void> _initRealtime() async {
@@ -613,13 +628,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     children: [
                       _buildDrawerItem(
-                        icon: LucideIcons.layoutDashboard,
+                        icon: Icons.dashboard_outlined,
                         title: "Dashboard",
                         isActive: true,
                         onTap: () => Navigator.pop(context),
                       ),
                       _buildDrawerItem(
-                        icon: LucideIcons.flaskConical,
+                        icon: Icons.science_outlined,
                         title: "Pengujian",
                         onTap: () async {
                           Navigator.pop(context);
@@ -629,7 +644,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                         },
                       ),
                       _buildDrawerItem(
-                        icon: LucideIcons.activity,
+                        icon: Icons.show_chart_rounded,
                         title: "Monitoring",
                         onTap: () {
                           Navigator.pop(context);
@@ -637,7 +652,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                         },
                       ),
                       _buildDrawerItem(
-                        icon: LucideIcons.user,
+                        icon: Icons.person_outline,
                         title: "Profil",
                         onTap: () {
                           Navigator.pop(context);
@@ -649,7 +664,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                         child: Divider(color: Colors.white24, height: 1),
                       ),
                       _buildDrawerItem(
-                        icon: LucideIcons.logOut,
+                        icon: Icons.logout,
                         title: "Logout",
                         isDestructive: true,
                         onTap: () => _logout(),
@@ -828,7 +843,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     Row(
                       children: [
                         const Icon(
-                          LucideIcons.activity,
+                          Icons.show_chart_rounded,
                           color: Color(0xFF2E7D32),
                           size: 22,
                         ),
@@ -918,7 +933,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     Row(
                       children: [
                         const Icon(
-                          LucideIcons.table,
+                          Icons.table_chart_outlined,
                           color: Color(0xFF2E7D32),
                           size: 20,
                         ),
@@ -1039,7 +1054,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                     DataColumn(label: Text('EC')),
                                     DataColumn(label: Text('TDS')),
                                     DataColumn(label: Text('pH')),
-                                    DataColumn(label: Text('CR Est')),
+                                    DataColumn(label: Text('Cr(VI) (µg/L)')),
+                                    DataColumn(label: Text('Ni (µg/L)')),
                                     DataColumn(label: Text('Status')),
                                   ],
                                   rows:
@@ -1095,11 +1111,27 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                   Text(
                                                     row.crEstimated
                                                             ?.toStringAsFixed(
-                                                              2,
+                                                              3,
                                                             ) ??
                                                         '-',
                                                     style: GoogleFonts.poppins(
                                                       fontSize: 12,
+                                                      fontWeight: FontWeight.w600,
+                                                      color: const Color(0xFF006948),
+                                                    ),
+                                                  ),
+                                                ),
+                                                DataCell(
+                                                  Text(
+                                                    row.niEstimated
+                                                            ?.toStringAsFixed(
+                                                              3,
+                                                            ) ??
+                                                        '-',
+                                                    style: GoogleFonts.poppins(
+                                                      fontSize: 12,
+                                                      fontWeight: FontWeight.w600,
+                                                      color: const Color(0xFF4338CA),
                                                     ),
                                                   ),
                                                 ),
@@ -1150,7 +1182,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     Row(
                       children: [
                         Icon(
-                          LucideIcons.mapPin,
+                          Icons.location_on_outlined,
                           color: Colors.green.shade600,
                           size: 22,
                         ),
@@ -1270,7 +1302,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                     ),
                                     DataColumn(label: Text('TDS')),
                                     DataColumn(label: Text('pH')),
-                                    DataColumn(label: Text('CR Est')),
+                                    DataColumn(label: Text('Cr(VI) (µg/L)')),
+                                    DataColumn(label: Text('Ni (µg/L)')),
                                   ],
                                   rows:
                                       _testingHistoryRows
@@ -1296,8 +1329,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                 ),
                                                 DataCell(
                                                   Text(
-                                                    row['petugas']
-                                                            ?.toString() ??
+                                                    row['user']?['name']?.toString() ??
+                                                        row['petugas']?.toString() ??
                                                         '-',
                                                     style: GoogleFonts.poppins(
                                                       fontSize: 12,
@@ -1346,10 +1379,27 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                                         ? double.parse(
                                                           row['cr_estimated']
                                                               .toString(),
-                                                        ).toStringAsFixed(2)
+                                                        ).toStringAsFixed(3)
                                                         : '-',
                                                     style: GoogleFonts.poppins(
                                                       fontSize: 12,
+                                                      fontWeight: FontWeight.w600,
+                                                      color: const Color(0xFF006948),
+                                                    ),
+                                                  ),
+                                                ),
+                                                DataCell(
+                                                  Text(
+                                                    row['ni_estimated'] != null
+                                                        ? double.parse(
+                                                          row['ni_estimated']
+                                                              .toString(),
+                                                        ).toStringAsFixed(3)
+                                                        : '-',
+                                                    style: GoogleFonts.poppins(
+                                                      fontSize: 12,
+                                                      fontWeight: FontWeight.w600,
+                                                      color: const Color(0xFF4338CA),
                                                     ),
                                                   ),
                                                 ),

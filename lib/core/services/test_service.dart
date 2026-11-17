@@ -1,8 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:hera/core/models/testing_history_result.dart';
-
-import 'package:hera/core/network/auth_interceptor.dart';
-import 'package:hera/core/network/auth_storage.dart';
+import 'package:hera/core/network/api_client.dart';
 import 'package:hera/core/network/backend_endpoints.dart';
 import 'package:hera/core/services/auth_service.dart';
 
@@ -12,17 +10,7 @@ class TestService {
   TestService({Dio? dio}) : _dio = dio ?? _createTestingDio();
 
   static Dio _createTestingDio() {
-    final options = BaseOptions(
-      baseUrl: BackendEndpoints.apiBaseUrl,
-      connectTimeout: const Duration(seconds: 20),
-      receiveTimeout: const Duration(seconds: 20),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    );
-
-    return Dio(options)..interceptors.add(AuthInterceptor(const AuthStorage()));
+    return ApiClient.createDio(BackendEndpoints.apiBaseUrl);
   }
 
   Future<Map<String, dynamic>> sendTestingData({

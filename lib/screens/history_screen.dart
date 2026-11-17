@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hera/core/models/sensor_reading.dart';
 import 'package:hera/core/services/sensor_service.dart';
 import 'package:intl/intl.dart';
-import 'package:lucide_icons/lucide_icons.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 const _kPrimary = Color(0xFF2E7D32);
@@ -168,7 +167,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         children: [
                           Row(
                             children: [
-                              Icon(LucideIcons.calendar, size: 13, color: _kTextSecondary),
+                              Icon(Icons.calendar_today_outlined, size: 13, color: _kTextSecondary),
                               const SizedBox(width: 4),
                               Text(_formatTimestamp(reading.createdAt), style: GoogleFonts.poppins(fontSize: 12, color: _kTextSecondary, fontWeight: FontWeight.w500)),
                             ],
@@ -186,13 +185,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         runSpacing: 8,
                         children: [
                           _buildMiniInfo('pH', _formatVal(reading.ph), Colors.indigo),
-                          _buildMiniInfo('TDS', _formatVal(reading.tds), Colors.teal),
-                          _buildMiniInfo('EC', _formatVal(reading.ec), Colors.blueGrey),
-                          _buildMiniInfo('SuAt', '${_formatVal(reading.suhuAir)}°C', Colors.blue),
-                          _buildMiniInfo('SuLi', '${_formatVal(reading.suhuLingkungan)}°C', Colors.orange),
-                          _buildMiniInfo('Hum', '${_formatVal(reading.kelembapan)}%', Colors.cyan),
-                          _buildMiniInfo('Volt', '${_formatVal(reading.tegangan)}V', Colors.purple),
-                          _buildMiniInfo('CR', '${_formatVal(reading.crEstimated)}ml', Colors.deepOrange),
+                          _buildMiniInfo('TDS', '${_formatVal(reading.tds)} ppm', Colors.teal),
+                          _buildMiniInfo('EC', '${_formatVal(reading.ec)} mS', Colors.blueGrey),
+                          _buildMiniInfo('Suhu Air', '${_formatVal(reading.suhuAir)}°C', Colors.blue),
+                          _buildMiniInfo('Suhu Ling.', '${_formatVal(reading.suhuLingkungan)}°C', Colors.orange),
+                          _buildMiniInfo('Kelembapan', '${_formatVal(reading.kelembapan)}%', Colors.cyan),
+                          _buildMiniInfo('Tegangan', '${_formatVal(reading.tegangan)}V', Colors.purple),
+                          _buildMiniInfo('Cr(VI)', reading.crEstimated != null ? '${_formatVal(reading.crEstimated)} µg/L' : '-', Colors.green),
+                          _buildMiniInfo('Ni', reading.niEstimated != null ? '${_formatVal(reading.niEstimated)} µg/L' : '-', Colors.indigo),
                         ],
                       ),
                     ],
@@ -208,7 +208,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   Widget _buildMiniInfo(String label, String value, MaterialColor color) {
     return SizedBox(
-      width: 65,
+      width: 82,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -226,7 +226,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(LucideIcons.history, size: 64, color: Colors.grey.shade300),
+            Icon(Icons.history, size: 64, color: Colors.grey.shade300),
             const SizedBox(height: 16),
             Text('Belum ada histori data.', style: GoogleFonts.poppins(fontSize: 16, color: _kTextSecondary)),
           ],
@@ -242,13 +242,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(LucideIcons.alertTriangle, size: 64, color: Colors.red.shade300),
+            Icon(Icons.warning_amber_rounded, size: 64, color: Colors.red.shade300),
             const SizedBox(height: 16),
             Text(_error ?? 'Terjadi kesalahan.', textAlign: TextAlign.center, style: GoogleFonts.poppins(fontSize: 14, color: _kTextSecondary)),
             const SizedBox(height: 24),
             ElevatedButton.icon(
               onPressed: () { setState(() => _isFirstLoad = true); _loadMore(); },
-              icon: const Icon(LucideIcons.refreshCw, size: 18),
+              icon: const Icon(Icons.refresh, size: 18),
               label: const Text('Coba Lagi'),
               style: ElevatedButton.styleFrom(backgroundColor: _kPrimary, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
             ),
@@ -265,7 +265,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         children: [
           Text('Gagal memuat lebih banyak data.', style: GoogleFonts.poppins(fontSize: 12, color: _kTextSecondary)),
           const SizedBox(height: 8),
-          TextButton.icon(onPressed: _loadMore, icon: const Icon(LucideIcons.refreshCw, size: 16, color: _kPrimary), label: Text('Coba Lagi', style: GoogleFonts.poppins(color: _kPrimary))),
+          TextButton.icon(onPressed: _loadMore, icon: const Icon(Icons.refresh, size: 16, color: _kPrimary), label: Text('Coba Lagi', style: GoogleFonts.poppins(color: _kPrimary))),
         ],
       ),
     );
