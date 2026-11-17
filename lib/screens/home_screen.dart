@@ -696,23 +696,23 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           children: [
             Container(
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.green.shade50, Colors.white],
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFE8F5E9), Colors.white],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: BorderRadius.circular(24),
-                border: Border.all(color: Colors.green.shade100),
+                borderRadius: BorderRadius.circular(22),
+                border: Border.all(color: const Color(0xFFC8E6C9), width: 1.2),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.08),
-                    blurRadius: 20,
-                    offset: const Offset(0, 8),
+                    color: Colors.black.withValues(alpha: 0.04),
+                    blurRadius: 16,
+                    offset: const Offset(0, 4),
                   ),
                 ],
               ),
               child: Padding(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(18),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -721,40 +721,121 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder:
-                                (context) => ProfileView(
-                                  username: _username,
-                                  email: _email,
-                                ),
+                            builder: (context) => ProfileView(username: _username, email: _email),
                           ),
                         );
                       },
                       child: Row(
                         children: [
-                          CircleAvatar(
-                            radius: 30,
-                            backgroundImage: const AssetImage(
-                              'assets/images/user.png',
-                            ),
-                            backgroundColor: Colors.grey.shade300,
-                          ),
-                          const SizedBox(width: 12),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Stack(
                             children: [
-                              Text(
-                                _username ?? "Pengguna",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blueAccent.shade700,
+                              CircleAvatar(
+                                radius: 26,
+                                backgroundImage: const AssetImage('assets/images/user.png'),
+                                backgroundColor: Colors.grey.shade200,
+                              ),
+                              Positioned(
+                                right: 0,
+                                bottom: 0,
+                                child: Container(
+                                  width: 13,
+                                  height: 13,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF16A34A),
+                                    shape: BoxShape.circle,
+                                    border: Border.all(color: Colors.white, width: 2),
+                                  ),
                                 ),
                               ),
+                            ],
+                          ),
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Flexible(
+                                      child: Text(
+                                        _username ?? "Petugas HERA",
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: const Color(0xFF1E293B),
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFF2E7D32).withValues(alpha: 0.12),
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                      child: Text(
+                                        'Online',
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold,
+                                          color: const Color(0xFF2E7D32),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  "Sistem Pemantauan Air & Logam Berat",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 11,
+                                    color: const Color(0xFF64748B),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Icon(Icons.arrow_forward_ios_rounded, size: 14, color: Color(0xFF94A3B8)),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: const Color(0xFFE2E8F0)),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(Icons.calendar_today_rounded, size: 13, color: Color(0xFF2E7D32)),
+                              const SizedBox(width: 6),
                               Text(
-                                "Lihat Profil",
+                                _formattedDate,
                                 style: GoogleFonts.poppins(
-                                  fontSize: 14,
-                                  color: Colors.black54,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                  color: const Color(0xFF334155),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              const Icon(Icons.access_time_rounded, size: 13, color: Color(0xFF2E7D32)),
+                              const SizedBox(width: 6),
+                              Text(
+                                _formattedTime,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color(0xFF1E293B),
                                 ),
                               ),
                             ],
@@ -762,62 +843,42 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: Text(
-                            _formattedDate,
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: const Color(0xFF2E7D32),
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          _formattedTime,
-                          style: GoogleFonts.poppins(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFF1A1A1A),
-                          ),
-                        ),
-                      ],
-                    ),
                     const SizedBox(height: 10),
                     Row(
                       children: [
+                        const Icon(Icons.location_on_outlined, size: 14, color: Color(0xFF64748B)),
+                        const SizedBox(width: 6),
                         Expanded(
                           child: Text(
-                            "Lokasi: $_locationMessage",
+                            _locationMessage,
                             style: GoogleFonts.poppins(
-                              fontSize: 14,
+                              fontSize: 11,
                               fontWeight: FontWeight.w500,
-                              color: Colors.black54,
+                              color: const Color(0xFF64748B),
                             ),
-                            maxLines: 2,
+                            maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
+                        if (_speed > 0) ...[
+                          const SizedBox(width: 6),
+                          Text(
+                            "${_speed.toStringAsFixed(1)} m/s",
+                            style: GoogleFonts.poppins(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFF0284C7),
+                            ),
+                          ),
+                        ],
                       ],
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      "Kecepatan: ${_speed.toStringAsFixed(2)} m/s",
-                      style: GoogleFonts.poppins(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black54,
-                      ),
                     ),
                   ],
                 ),
               ),
             ).animate(delay: 200.ms).fade(duration: 500.ms).slideY(begin: 0.05, end: 0, curve: Curves.easeOutQuad),
+            const SizedBox(height: 18),
+            _buildQuickActions(),
             const SizedBox(height: 20),
             Container(
               decoration: BoxDecoration(
@@ -1484,4 +1545,161 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       ),
     );
   }
+
+  Widget _buildQuickActions() {
+    final actions = [
+      _QuickActionItem(
+        title: 'Monitoring',
+        subtitle: 'Sensor & AI Cr/Ni',
+        icon: Icons.analytics_rounded,
+        color: const Color(0xFF006948),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const MonitoringScreen()),
+          );
+        },
+      ),
+      _QuickActionItem(
+        title: 'Uji Lokasi',
+        subtitle: 'Pengujian Baru',
+        icon: Icons.add_location_alt_rounded,
+        color: const Color(0xFF0284C7),
+        onTap: () async {
+          await Navigator.pushNamed(context, '/test_location');
+          if (!mounted || _isDisposed) return;
+          _loadSensorSummary(showLoader: false);
+        },
+      ),
+      _QuickActionItem(
+        title: 'Histori Sensor',
+        subtitle: 'Log Raw Sensor',
+        icon: Icons.ssid_chart_rounded,
+        color: const Color(0xFF4338CA),
+        onTap: () => Navigator.pushNamed(context, '/history'),
+      ),
+      _QuickActionItem(
+        title: 'Data Laporan',
+        subtitle: 'Histori Lapangan',
+        icon: Icons.assignment_rounded,
+        color: const Color(0xFFD97706),
+        onTap: () => Navigator.pushNamed(context, '/testing-history'),
+      ),
+    ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            const Icon(Icons.grid_view_rounded, size: 18, color: Color(0xFF2E7D32)),
+            const SizedBox(width: 8),
+            Text(
+              'AKSI CEPAT',
+              style: GoogleFonts.poppins(
+                fontSize: 12,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 0.8,
+                color: const Color(0xFF5F6E65),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: actions.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
+            childAspectRatio: 1.85,
+          ),
+          itemBuilder: (context, index) {
+            final a = actions[index];
+            return Material(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              elevation: 0,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(16),
+                onTap: a.onTap,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: const Color(0xFFE2E8F0)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.02),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: a.color.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(a.icon, color: a.color, size: 22),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              a.title,
+                              style: GoogleFonts.poppins(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFF1E293B),
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              a.subtitle,
+                              style: GoogleFonts.poppins(
+                                fontSize: 10,
+                                color: const Color(0xFF64748B),
+                                fontWeight: FontWeight.w500,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class _QuickActionItem {
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _QuickActionItem({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.color,
+    required this.onTap,
+  });
 }

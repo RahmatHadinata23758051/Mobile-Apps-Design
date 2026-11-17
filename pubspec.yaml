@@ -2,7 +2,7 @@ name: "hera"
 description: "HERA V2 Enhancement."
 publish_to: 'none'
 
-version: 2.0.0+1
+version: 2.1.0+2
 environment:
   sdk: ^3.7.0
 
