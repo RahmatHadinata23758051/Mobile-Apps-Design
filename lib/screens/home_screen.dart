@@ -536,14 +536,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF1F8F2),
+      backgroundColor: const Color(0xFFF4F7F5),
       drawer: Drawer(
         backgroundColor: Colors.transparent,
         elevation: 0,
         child: Container(
           margin: const EdgeInsets.only(top: 60, bottom: 60, left: 16, right: 16),
           decoration: BoxDecoration(
-            color: const Color(0xFF1B5E20),
+            color: const Color(0xFF004D34),
             borderRadius: BorderRadius.circular(28),
             boxShadow: [
               BoxShadow(
@@ -560,7 +560,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 DrawerHeader(
                   decoration: const BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [Color(0xFF2E7D32), Color(0xFF43A047)],
+                      colors: [Color(0xFF006948), Color(0xFF009664)],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
@@ -678,7 +678,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         ),
       ),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF2E7D32),
+        backgroundColor: const Color(0xFF006948),
         elevation: 0,
         leading: Builder(
           builder: (context) => IconButton(
@@ -686,7 +686,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             onPressed: () => Scaffold.of(context).openDrawer(),
           ),
         ),
-        title: Text("Dashboard", style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20)),
+        title: Text("Dashboard", style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 18)),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -697,12 +697,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             Container(
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [Color(0xFFE8F5E9), Colors.white],
+                  colors: [Color(0xFFE8F5EE), Colors.white],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.circular(22),
-                border: Border.all(color: const Color(0xFFC8E6C9), width: 1.2),
+                border: Border.all(color: const Color(0xFFE2E8F0)),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.04),
@@ -771,7 +771,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                     Container(
                                       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                                       decoration: BoxDecoration(
-                                        color: const Color(0xFF2E7D32).withValues(alpha: 0.12),
+                                        color: const Color(0xFF006948).withValues(alpha: 0.12),
                                         borderRadius: BorderRadius.circular(6),
                                       ),
                                       child: Text(
@@ -779,7 +779,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                         style: GoogleFonts.poppins(
                                           fontSize: 10,
                                           fontWeight: FontWeight.bold,
-                                          color: const Color(0xFF2E7D32),
+                                          color: const Color(0xFF006948),
                                         ),
                                       ),
                                     ),
@@ -814,7 +814,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                         children: [
                           Row(
                             children: [
-                              const Icon(Icons.calendar_today_rounded, size: 13, color: Color(0xFF2E7D32)),
+                              const Icon(Icons.calendar_today_rounded, size: 13, color: Color(0xFF006948)),
                               const SizedBox(width: 6),
                               Text(
                                 _formattedDate,
@@ -828,7 +828,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                           ),
                           Row(
                             children: [
-                              const Icon(Icons.access_time_rounded, size: 13, color: Color(0xFF2E7D32)),
+                              const Icon(Icons.access_time_rounded, size: 13, color: Color(0xFF006948)),
                               const SizedBox(width: 6),
                               Text(
                                 _formattedTime,
@@ -882,16 +882,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             const SizedBox(height: 20),
             Container(
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.white, Colors.grey.shade50],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(16),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(color: const Color(0xFFE2E8F0)),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
-                    blurRadius: 10,
+                    color: Colors.black.withValues(alpha: 0.03),
+                    blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),
                 ],
@@ -905,7 +902,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                       children: [
                         const Icon(
                           Icons.show_chart_rounded,
-                          color: Color(0xFF2E7D32),
+                          color: Color(0xFF006948),
                           size: 22,
                         ),
                         const SizedBox(width: 8),
@@ -915,7 +912,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                             style: GoogleFonts.poppins(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: const Color(0xFF2E7D32),
+                              color: const Color(0xFF006948),
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -972,16 +969,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             const SizedBox(height: 20),
             Container(
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.white, Colors.grey.shade50],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(16),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(color: const Color(0xFFE2E8F0)),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
-                    blurRadius: 10,
+                    color: Colors.black.withValues(alpha: 0.03),
+                    blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),
                 ],
@@ -995,7 +989,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                       children: [
                         const Icon(
                           Icons.table_chart_outlined,
-                          color: Color(0xFF2E7D32),
+                          color: Color(0xFF006948),
                           size: 20,
                         ),
                         const SizedBox(width: 8),
@@ -1008,7 +1002,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                 style: GoogleFonts.poppins(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
-                                  color: const Color(0xFF2E7D32),
+                                  color: const Color(0xFF006948),
                                 ),
                               ),
                               GestureDetector(
@@ -1018,7 +1012,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                   style: GoogleFonts.poppins(
                                     fontSize: 11,
                                     fontWeight: FontWeight.w600,
-                                    color: Color(0xFF43A047),
+                                    color: Color(0xFF009664),
                                   ),
                                 ),
                               ),
@@ -1044,7 +1038,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                         style: GoogleFonts.poppins(
                                           fontSize: 13,
                                           fontWeight: FontWeight.w600,
-                                          color: const Color(0xFF2E7D32),
+                                          color: const Color(0xFF006948),
                                         ),
                                       ),
                                     ),
@@ -1105,7 +1099,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                   headingTextStyle: GoogleFonts.poppins(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w600,
-                                    color: const Color(0xFF2E7D32),
+                                    color: const Color(0xFF006948),
                                   ),
                                   dataTextStyle: GoogleFonts.poppins(
                                     fontSize: 12,
@@ -1221,16 +1215,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             const SizedBox(height: 20),
             Container(
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.white, Colors.grey.shade50],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(16),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(color: const Color(0xFFE2E8F0)),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
-                    blurRadius: 10,
+                    color: Colors.black.withValues(alpha: 0.03),
+                    blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),
                 ],
@@ -1244,7 +1235,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                       children: [
                         Icon(
                           Icons.location_on_outlined,
-                          color: Colors.green.shade600,
+                          color: const Color(0xFF006948),
                           size: 22,
                         ),
                         const SizedBox(width: 8),
@@ -1257,7 +1248,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                 style: GoogleFonts.poppins(
                                   fontSize: 17,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.green.shade700,
+                                  color: const Color(0xFF006948),
                                 ),
                               ),
                               GestureDetector(
@@ -1271,7 +1262,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                   style: GoogleFonts.poppins(
                                     fontSize: 11,
                                     fontWeight: FontWeight.w600,
-                                    color: Colors.green.shade600,
+                                    color: const Color(0xFF006948),
                                   ),
                                 ),
                               ),
@@ -1297,7 +1288,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                         style: GoogleFonts.poppins(
                                           fontSize: 13,
                                           fontWeight: FontWeight.w600,
-                                          color: Colors.green.shade700,
+                                          color: const Color(0xFF006948),
                                         ),
                                       ),
                                     ),
@@ -1350,7 +1341,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                   headingTextStyle: GoogleFonts.poppins(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w600,
-                                    color: Colors.green.shade700,
+                                    color: const Color(0xFF006948),
                                   ),
                                   dataTextStyle: GoogleFonts.poppins(
                                     fontSize: 12,
@@ -1491,51 +1482,40 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     Color color,
   ) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: color.withValues(alpha: 0.15),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
-        border: Border.all(color: color.withValues(alpha: 0.1), width: 1.5),
+        color: const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
       ),
       child: Column(
         children: [
           Container(
-            width: 48,
-            height: 48,
+            width: 42,
+            height: 42,
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [color.withValues(alpha: 0.2), color.withValues(alpha: 0.05)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              color: color.withValues(alpha: 0.12),
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, color: color, size: 24),
+            child: Icon(icon, color: color, size: 20),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 10),
           Text(
             count,
             style: GoogleFonts.poppins(
-              fontSize: 22,
+              fontSize: 20,
               fontWeight: FontWeight.w800,
-              color: color,
+              color: const Color(0xFF1E293B),
             ),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 2),
           Text(
             title,
             style: GoogleFonts.poppins(
               fontSize: 11,
               fontWeight: FontWeight.w600,
-              color: const Color(0xFF6B7280),
-              letterSpacing: 0.5,
+              color: const Color(0xFF64748B),
+              letterSpacing: 0.3,
             ),
             textAlign: TextAlign.center,
             maxLines: 1,
@@ -1592,7 +1572,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       children: [
         Row(
           children: [
-            const Icon(Icons.grid_view_rounded, size: 18, color: Color(0xFF2E7D32)),
+            const Icon(Icons.grid_view_rounded, size: 18, color: Color(0xFF006948)),
             const SizedBox(width: 8),
             Text(
               'AKSI CEPAT',

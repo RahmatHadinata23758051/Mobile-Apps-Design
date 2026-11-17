@@ -9,11 +9,11 @@ import 'package:hera/core/services/sensor_service.dart';
 import 'package:hera/core/services/realtime_service.dart';
 import 'package:hera/core/models/sensor_reading.dart';
 
-const _kPrimary = Color(0xFF2E7D32);
-const _kPrimaryLight = Color(0xFF43A047);
-const _kBackground = Color(0xFFF1F8F2);
+const _kPrimary = Color(0xFF006948);
+const _kPrimaryLight = Color(0xFF009664);
+const _kBackground = Color(0xFFF4F7F5);
 const _kSurface = Color(0xFFFFFFFF);
-const _kTextSecondary = Color(0xFF6B7280);
+const _kTextSecondary = Color(0xFF5F6E65);
 
 class TestLocationScreen extends StatefulWidget {
   const TestLocationScreen({super.key});
@@ -171,20 +171,58 @@ class _TestLocationScreenState extends State<TestLocationScreen> {
     return rawAltitude;
   }
 
-  Widget _buildSensorCard(String label, String value, String unit, {double? width, required double scale}) {
+  Widget _buildSensorCard(String label, String value, String unit, {double? width, required double scale, Color? accentColor}) {
+    final effectiveAccent = accentColor ?? _kPrimary;
     return Container(
       width: width,
-      padding: EdgeInsets.symmetric(vertical: 8 * scale, horizontal: 10 * scale),
+      padding: EdgeInsets.symmetric(vertical: 10 * scale, horizontal: 10 * scale),
       decoration: BoxDecoration(
-        color: Colors.green.shade50,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.green.shade200),
+        color: const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(label, style: GoogleFonts.poppins(fontSize: 11 * scale, fontWeight: FontWeight.w600, color: _kPrimary), overflow: TextOverflow.ellipsis),
+          Text(
+            label,
+            style: GoogleFonts.poppins(
+              fontSize: 11 * scale,
+              fontWeight: FontWeight.w600,
+              color: effectiveAccent,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
           SizedBox(height: 4 * scale),
-          Text("$value $unit", style: GoogleFonts.poppins(fontSize: 13 * scale, fontWeight: FontWeight.bold, color: const Color(0xFF1A1A1A)), overflow: TextOverflow.ellipsis),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Flexible(
+                child: Text(
+                  value,
+                  style: GoogleFonts.poppins(
+                    fontSize: 13 * scale,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF1E293B),
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              if (unit.isNotEmpty) ...[
+                SizedBox(width: 3 * scale),
+                Text(
+                  unit,
+                  style: GoogleFonts.poppins(
+                    fontSize: 10 * scale,
+                    fontWeight: FontWeight.w500,
+                    color: _kTextSecondary,
+                  ),
+                ),
+              ],
+            ],
+          ),
         ],
       ),
     );
@@ -197,9 +235,29 @@ class _TestLocationScreenState extends State<TestLocationScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(label, textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis, style: GoogleFonts.poppins(fontSize: (12 * scale).clamp(10.0, 12.0), color: _kPrimary, fontWeight: FontWeight.bold)),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.poppins(
+                fontSize: (11 * scale).clamp(10.0, 12.0),
+                color: _kTextSecondary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
             SizedBox(height: 4 * scale),
-            Text(value, textAlign: TextAlign.center, maxLines: 2, overflow: TextOverflow.ellipsis, style: GoogleFonts.poppins(fontSize: (11 * scale).clamp(9.0, 11.0), color: const Color(0xFF1A1A1A))),
+            Text(
+              value,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.poppins(
+                fontSize: (12 * scale).clamp(10.0, 13.0),
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFF1E293B),
+              ),
+            ),
           ],
         ),
       ),
@@ -212,7 +270,10 @@ class _TestLocationScreenState extends State<TestLocationScreen> {
       backgroundColor: _kBackground,
       appBar: AppBar(
         backgroundColor: _kPrimary,
-        title: Text("Pengujian dengan Lokasi", style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white)),
+        title: Text(
+          "Pengujian Lapangan",
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 18),
+        ),
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
@@ -226,24 +287,57 @@ class _TestLocationScreenState extends State<TestLocationScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Sensor Section Header
+                // Sensor Section Header Banner
                 Container(
                   width: double.infinity,
                   padding: EdgeInsets.all(16 * scale),
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(colors: [_kPrimary, _kPrimaryLight], begin: Alignment.topLeft, end: Alignment.bottomRight),
-                    borderRadius: BorderRadius.circular(16),
+                    gradient: const LinearGradient(
+                      colors: [_kPrimary, _kPrimaryLight],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(18),
+                    boxShadow: [
+                      BoxShadow(
+                        color: _kPrimary.withValues(alpha: 0.25),
+                        blurRadius: 14,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.sensors_rounded, size: 28 * scale, color: Colors.white),
+                      Container(
+                        padding: EdgeInsets.all(8 * scale),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(Icons.sensors_rounded, size: 24 * scale, color: Colors.white),
+                      ),
                       SizedBox(width: 12 * scale),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Tinjauan Sensor Aktual", style: GoogleFonts.poppins(fontSize: 14 * scale, fontWeight: FontWeight.bold, color: Colors.white)),
-                          Text("Data langsung dari sensor HERA", style: GoogleFonts.poppins(fontSize: 11 * scale, color: Colors.white.withValues(alpha: 0.85))),
-                        ],
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Tinjauan Sensor Aktual",
+                              style: GoogleFonts.poppins(
+                                fontSize: 14 * scale,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              "Data telemetri langsung terhubung ke IoT",
+                              style: GoogleFonts.poppins(
+                                fontSize: 11 * scale,
+                                color: Colors.white.withValues(alpha: 0.88),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -254,13 +348,35 @@ class _TestLocationScreenState extends State<TestLocationScreen> {
                 if (_latestReading == null)
                   Container(
                     padding: EdgeInsets.all(24 * scale),
-                    decoration: BoxDecoration(color: _kSurface, borderRadius: BorderRadius.circular(16), boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 12, offset: const Offset(0, 4))]),
+                    decoration: BoxDecoration(
+                      color: _kSurface,
+                      borderRadius: BorderRadius.circular(18),
+                      border: Border.all(color: const Color(0xFFE2E8F0)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.04),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(width: 16, height: 16, child: CircularProgressIndicator(color: _kPrimary, strokeWidth: 2)),
+                        SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(color: _kPrimary, strokeWidth: 2.2),
+                        ),
                         SizedBox(width: 12 * scale),
-                        Text("Memindai sensor dari air...", style: GoogleFonts.poppins(fontSize: 13 * scale, color: _kTextSecondary, fontStyle: FontStyle.italic)),
+                        Text(
+                          "Memindai sensor dari air...",
+                          style: GoogleFonts.poppins(
+                            fontSize: 13 * scale,
+                            color: _kTextSecondary,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
                       ],
                     ),
                   )
@@ -269,21 +385,32 @@ class _TestLocationScreenState extends State<TestLocationScreen> {
                     double itemWidth = (sw - 40 * scale - 24 * scale) / 3;
                     return Container(
                       padding: EdgeInsets.all(16 * scale),
-                      decoration: BoxDecoration(color: _kSurface, borderRadius: BorderRadius.circular(16), boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 12, offset: const Offset(0, 4))]),
+                      decoration: BoxDecoration(
+                        color: _kSurface,
+                        borderRadius: BorderRadius.circular(18),
+                        border: Border.all(color: const Color(0xFFE2E8F0)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.04),
+                            blurRadius: 12,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
                       child: Wrap(
                         spacing: 10 * scale,
                         runSpacing: 10 * scale,
                         alignment: WrapAlignment.center,
                         children: [
-                          _buildSensorCard("pH", _latestReading!.ph?.toStringAsFixed(1) ?? "-", "", width: itemWidth, scale: scale),
-                          _buildSensorCard("TDS", _latestReading!.tds?.toStringAsFixed(0) ?? "-", "ppm", width: itemWidth, scale: scale),
-                          _buildSensorCard("Suhu Air", _latestReading!.suhuAir?.toStringAsFixed(1) ?? "-", "°C", width: itemWidth, scale: scale),
-                          _buildSensorCard("Suhu Udara", _latestReading!.suhuLingkungan?.toStringAsFixed(1) ?? "-", "°C", width: itemWidth, scale: scale),
-                          _buildSensorCard("Kelembapan", _latestReading!.kelembapan?.toStringAsFixed(1) ?? "-", "%", width: itemWidth, scale: scale),
-                          _buildSensorCard("EC", _latestReading!.ec?.toStringAsFixed(2) ?? "-", "mS", width: itemWidth, scale: scale),
-                          _buildSensorCard("Tegangan", _latestReading!.tegangan?.toStringAsFixed(2) ?? "-", "V", width: itemWidth, scale: scale),
-                          _buildSensorCard("Cr(VI) Est.", _latestReading!.crEstimated?.toStringAsFixed(3) ?? "-", "µg/L", width: itemWidth, scale: scale),
-                          _buildSensorCard("Ni Est.", _latestReading!.niEstimated?.toStringAsFixed(3) ?? "-", "µg/L", width: itemWidth, scale: scale),
+                          _buildSensorCard("pH", _latestReading!.ph?.toStringAsFixed(1) ?? "-", "", width: itemWidth, scale: scale, accentColor: const Color(0xFF0284C7)),
+                          _buildSensorCard("TDS", _latestReading!.tds?.toStringAsFixed(0) ?? "-", "ppm", width: itemWidth, scale: scale, accentColor: const Color(0xFF0EA5E9)),
+                          _buildSensorCard("Suhu Air", _latestReading!.suhuAir?.toStringAsFixed(1) ?? "-", "°C", width: itemWidth, scale: scale, accentColor: const Color(0xFF059669)),
+                          _buildSensorCard("Suhu Udara", _latestReading!.suhuLingkungan?.toStringAsFixed(1) ?? "-", "°C", width: itemWidth, scale: scale, accentColor: const Color(0xFFEA580C)),
+                          _buildSensorCard("Kelembapan", _latestReading!.kelembapan?.toStringAsFixed(1) ?? "-", "%", width: itemWidth, scale: scale, accentColor: const Color(0xFF0D9488)),
+                          _buildSensorCard("EC", _latestReading!.ec?.toStringAsFixed(2) ?? "-", "mS", width: itemWidth, scale: scale, accentColor: const Color(0xFFD97706)),
+                          _buildSensorCard("Tegangan", _latestReading!.tegangan?.toStringAsFixed(2) ?? "-", "V", width: itemWidth, scale: scale, accentColor: const Color(0xFF7C3AED)),
+                          _buildSensorCard("Cr(VI) Est.", _latestReading!.crEstimated?.toStringAsFixed(3) ?? "-", "µg/L", width: itemWidth, scale: scale, accentColor: _kPrimary),
+                          _buildSensorCard("Ni Est.", _latestReading!.niEstimated?.toStringAsFixed(3) ?? "-", "µg/L", width: itemWidth, scale: scale, accentColor: const Color(0xFF4338CA)),
                         ],
                       ),
                     );
@@ -292,63 +419,119 @@ class _TestLocationScreenState extends State<TestLocationScreen> {
                 SizedBox(height: 20 * scale),
 
                 // GPS Section
-                Align(alignment: Alignment.centerLeft, child: Text("Tangkapan GPS", style: GoogleFonts.poppins(fontSize: 15 * scale, fontWeight: FontWeight.bold, color: const Color(0xFF1A1A1A)))),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Row(
+                    children: [
+                      const Icon(Icons.satellite_alt_rounded, size: 16, color: _kPrimary),
+                      const SizedBox(width: 6),
+                      Text(
+                        "KOORDINAT GPS LAPANGAN",
+                        style: GoogleFonts.poppins(
+                          fontSize: 11 * scale,
+                          fontWeight: FontWeight.w700,
+                          color: _kTextSecondary,
+                          letterSpacing: 0.8,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 SizedBox(height: 10 * scale),
                 Container(
-                  padding: EdgeInsets.symmetric(vertical: 16 * scale, horizontal: 20 * scale),
+                  padding: EdgeInsets.symmetric(vertical: 16 * scale, horizontal: 16 * scale),
                   decoration: BoxDecoration(
                     color: _kSurface,
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: Colors.green.shade200),
-                    boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 12, offset: const Offset(0, 4))],
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: const Color(0xFFE2E8F0)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.04),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
                   child: Row(
                     children: [
-                      _buildGpsItem(label: "Latitude", value: _latitude != null ? _latitude!.toStringAsFixed(6) : "Belum didapat", scale: scale),
-                      Container(width: 1, height: 40 * scale, color: Colors.green.shade200),
-                      _buildGpsItem(label: "Longitude", value: _longitude != null ? _longitude!.toStringAsFixed(6) : "Belum didapat", scale: scale),
-                      Container(width: 1, height: 40 * scale, color: Colors.green.shade200),
-                      _buildGpsItem(label: "Altitude", value: _altitude != null ? "${_altitude!.toStringAsFixed(2)} m" : "Belum didapat", scale: scale),
+                      _buildGpsItem(
+                        label: "Latitude",
+                        value: _latitude != null ? _latitude!.toStringAsFixed(6) : "Belum didapat",
+                        scale: scale,
+                      ),
+                      Container(width: 1, height: 36 * scale, color: const Color(0xFFE2E8F0)),
+                      _buildGpsItem(
+                        label: "Longitude",
+                        value: _longitude != null ? _longitude!.toStringAsFixed(6) : "Belum didapat",
+                        scale: scale,
+                      ),
+                      Container(width: 1, height: 36 * scale, color: const Color(0xFFE2E8F0)),
+                      _buildGpsItem(
+                        label: "Altitude",
+                        value: _altitude != null ? "${_altitude!.toStringAsFixed(2)} m" : "Belum didapat",
+                        scale: scale,
+                      ),
                     ],
                   ),
                 ),
 
-                SizedBox(height: 24 * scale),
+                SizedBox(height: 22 * scale),
 
                 // Status Message
                 if (_statusMessage.isNotEmpty)
                   Container(
                     width: double.infinity,
-                    padding: EdgeInsets.all(12 * scale),
+                    padding: EdgeInsets.symmetric(horizontal: 14 * scale, vertical: 12 * scale),
                     decoration: BoxDecoration(
                       color: _statusColor.withValues(alpha: 0.08),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: _statusColor.withValues(alpha: 0.3)),
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: _statusColor.withValues(alpha: 0.25)),
                     ),
-                    child: Text(_statusMessage, textAlign: TextAlign.center, style: GoogleFonts.poppins(fontSize: 13 * scale, color: _statusColor, fontWeight: FontWeight.w500)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.info_outline_rounded, size: 16 * scale, color: _statusColor),
+                        SizedBox(width: 8 * scale),
+                        Expanded(
+                          child: Text(
+                            _statusMessage,
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: 12 * scale,
+                              color: _statusColor,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
 
-                SizedBox(height: 16 * scale),
+                SizedBox(height: 18 * scale),
 
                 // Submit Button
                 SizedBox(
                   width: double.infinity,
-                  height: 54 * scale,
+                  height: 52 * scale,
                   child: ElevatedButton.icon(
                     onPressed: _isLoading ? null : _fetchAndSendTestData,
                     icon: _isLoading
-                        ? SizedBox(width: 20 * scale, height: 20 * scale, child: const CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5))
-                        : Icon(Icons.send_rounded, size: 20 * scale),
+                        ? SizedBox(
+                            width: 20 * scale,
+                            height: 20 * scale,
+                            child: const CircularProgressIndicator(color: Colors.white, strokeWidth: 2.2),
+                          )
+                        : Icon(Icons.cloud_upload_rounded, size: 20 * scale),
                     label: Text(
-                      _isLoading ? "Merekam..." : "Simpan Data Pengujian",
+                      _isLoading ? "Merekam Validasi..." : "Simpan Data Pengujian",
                       style: GoogleFonts.poppins(fontSize: 15 * scale, fontWeight: FontWeight.bold),
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: _kPrimary,
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                      elevation: 3,
-                      shadowColor: _kPrimary.withValues(alpha: 0.4),
+                      elevation: 2,
+                      shadowColor: _kPrimary.withValues(alpha: 0.35),
                     ),
                   ),
                 ),

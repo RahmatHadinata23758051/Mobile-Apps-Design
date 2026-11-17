@@ -3,11 +3,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hera/core/services/auth_service.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-const _kPrimary = Color(0xFF2E7D32);
-const _kPrimaryLight = Color(0xFF43A047);
-const _kBackground = Color(0xFFF1F8F2);
+const _kPrimary = Color(0xFF006948);
+const _kPrimaryLight = Color(0xFF009664);
+const _kBackground = Color(0xFFF4F7F5);
 const _kSurface = Color(0xFFFFFFFF);
-const _kTextSecondary = Color(0xFF6B7280);
+const _kTextSecondary = Color(0xFF5F6E65);
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -86,16 +86,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
   InputDecoration _fieldDecoration(String label, IconData icon, {Widget? suffix}) {
     return InputDecoration(
       labelText: label,
-      labelStyle: GoogleFonts.poppins(color: _kTextSecondary, fontSize: 14),
-      prefixIcon: Icon(icon, color: _kPrimary),
+      labelStyle: GoogleFonts.poppins(color: _kTextSecondary, fontSize: 13),
+      prefixIcon: Icon(icon, color: _kPrimary, size: 20),
       suffixIcon: suffix,
       filled: true,
-      fillColor: const Color(0xFFF9FBF9),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Color(0xFFE0E0E0))),
-      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Color(0xFFE0E0E0))),
-      focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: _kPrimary, width: 2)),
-      errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.red.shade400)),
-      focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.red.shade400, width: 2)),
+      fillColor: const Color(0xFFF8FAFC),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Color(0xFFE2E8F0))),
+      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: Color(0xFFE2E8F0))),
+      focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: _kPrimary, width: 1.8)),
+      errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Colors.red.shade400)),
+      focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide(color: Colors.red.shade400, width: 1.8)),
     );
   }
 
@@ -106,7 +107,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // ── Green Header ──
+            // ── Modern Emerald Header ──
             Container(
               width: double.infinity,
               padding: const EdgeInsets.fromLTRB(24, 32, 24, 28),
@@ -125,7 +126,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   Text(
                     'Daftar untuk mulai menggunakan\nHERA Monitoring',
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.poppins(fontSize: 13, color: Colors.white.withValues(alpha: 0.85)),
+                    style: GoogleFonts.poppins(fontSize: 13, color: Colors.white.withValues(alpha: 0.88)),
                   ),
                 ],
               ),
@@ -144,8 +145,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       padding: const EdgeInsets.all(24),
                       decoration: BoxDecoration(
                         color: _kSurface,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 20, offset: const Offset(0, 4))],
+                        borderRadius: BorderRadius.circular(22),
+                        border: Border.all(color: const Color(0xFFE2E8F0)),
+                        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 20, offset: const Offset(0, 4))],
                       ),
                       child: Form(
                         key: _formKey,
@@ -153,7 +155,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Center(
-                              child: Image.asset('assets/images/unhas-logo.png', height: 60),
+                              child: Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: _kBackground,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Image.asset('assets/images/unhas-logo.png', height: 56),
+                              ),
                             ),
                             const SizedBox(height: 16),
                             Text(
@@ -254,13 +263,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: _kPrimary,
                                   foregroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                                   elevation: 2,
-                                  shadowColor: _kPrimary.withValues(alpha: 0.4),
+                                  shadowColor: _kPrimary.withValues(alpha: 0.35),
                                 ),
                                 child: _isLoading
                                     ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5))
-                                    : Text('Daftar Sekarang', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold)),
+                                    : Text('Daftar Sekarang', style: GoogleFonts.poppins(fontSize: 15, fontWeight: FontWeight.bold)),
                               ),
                             ),
                           ],
@@ -274,7 +283,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         Text('Sudah punya akun? ', style: GoogleFonts.poppins(fontSize: 14, color: _kTextSecondary)),
                         GestureDetector(
                           onTap: _isLoading ? null : _navigateToLogin,
-                          child: Text('Login di sini', style: GoogleFonts.poppins(fontSize: 14, color: _kPrimary, fontWeight: FontWeight.w600)),
+                          child: Text('Login di sini', style: GoogleFonts.poppins(fontSize: 14, color: _kPrimary, fontWeight: FontWeight.w700)),
                         ),
                       ],
                     ),

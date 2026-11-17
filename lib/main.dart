@@ -28,14 +28,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.green,
+        useMaterial3: true,
+        primaryColor: const Color(0xFF006948),
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF2E7D32),
-          primary: const Color(0xFF2E7D32),
-          secondary: const Color(0xFF43A047),
+          seedColor: const Color(0xFF006948),
+          primary: const Color(0xFF006948),
+          secondary: const Color(0xFF009664),
+          surface: Colors.white,
         ),
         textTheme: GoogleFonts.poppinsTextTheme(),
-        scaffoldBackgroundColor: const Color(0xFFF1F8F2),
+        scaffoldBackgroundColor: const Color(0xFFF4F7F5),
         pageTransitionsTheme: const PageTransitionsTheme(
           builders: {
             TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
@@ -44,56 +46,56 @@ class MyApp extends StatelessWidget {
           },
         ),
         cardTheme: const CardThemeData(
-          elevation: 8,
-          shadowColor: Color(0x14000000), // Colors.black.withValues(alpha: 0.08)
+          elevation: 2,
+          shadowColor: Color(0x0D000000),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
           color: Colors.white,
         ),
         appBarTheme: AppBarTheme(
-          backgroundColor: const Color(0xFF2E7D32),
+          backgroundColor: const Color(0xFF006948),
           elevation: 0,
           centerTitle: true,
           titleTextStyle: GoogleFonts.poppins(
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.bold,
             color: Colors.white,
             fontSize: 18,
-            letterSpacing: 0.5,
+            letterSpacing: 0.3,
           ),
           iconTheme: const IconThemeData(color: Colors.white),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF2E7D32),
+            backgroundColor: const Color(0xFF006948),
             foregroundColor: Colors.white,
             padding: const EdgeInsets.symmetric(vertical: 16),
-            elevation: 4,
-            shadowColor: const Color(0xFF2E7D32).withValues(alpha: 0.3),
+            elevation: 2,
+            shadowColor: const Color(0xFF006948).withValues(alpha: 0.3),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(14),
             ),
             textStyle: GoogleFonts.poppins(
-              fontSize: 16,
+              fontSize: 15,
               fontWeight: FontWeight.bold,
-              letterSpacing: 0.5,
+              letterSpacing: 0.3,
             ),
           ),
         ),
         inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+            borderRadius: BorderRadius.circular(14),
+            borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+            borderRadius: BorderRadius.circular(14),
+            borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(color: Color(0xFF2E7D32), width: 2),
+            borderRadius: BorderRadius.circular(14),
+            borderSide: const BorderSide(color: Color(0xFF006948), width: 1.8),
           ),
-          prefixIconColor: const Color(0xFF2E7D32),
+          prefixIconColor: const Color(0xFF006948),
           filled: true,
-          fillColor: const Color(0xFFF9FBF9),
+          fillColor: const Color(0xFFF8FAFC),
         ),
       ),
       initialRoute: '/auth-bootstrap',
@@ -148,6 +150,58 @@ class _AuthBootstrapScreenState extends State<AuthBootstrapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    return Scaffold(
+      backgroundColor: const Color(0xFFF4F7F5),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF006948).withValues(alpha: 0.12),
+                    blurRadius: 24,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: Image.asset('assets/images/unhas-logo.png', height: 72),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              'HERA V.2',
+              style: GoogleFonts.poppins(
+                fontSize: 22,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 1.5,
+                color: const Color(0xFF006948),
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Heavy Metal Monitoring & Early Warning System',
+              style: GoogleFonts.poppins(
+                fontSize: 12,
+                color: const Color(0xFF5F6E65),
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 36),
+            const SizedBox(
+              width: 26,
+              height: 26,
+              child: CircularProgressIndicator(
+                strokeWidth: 2.5,
+                color: Color(0xFF006948),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

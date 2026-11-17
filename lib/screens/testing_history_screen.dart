@@ -5,10 +5,10 @@ import 'package:hera/core/services/auth_service.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-const _kPrimary = Color(0xFF2E7D32);
-const _kBackground = Color(0xFFF1F8F2);
+const _kPrimary = Color(0xFF006948);
+const _kBackground = Color(0xFFF4F7F5);
 const _kSurface = Color(0xFFFFFFFF);
-const _kTextSecondary = Color(0xFF6B7280);
+const _kTextSecondary = Color(0xFF5F6E65);
 
 class TestingHistoryScreen extends StatefulWidget {
   const TestingHistoryScreen({super.key});
@@ -158,8 +158,15 @@ class _TestingHistoryScreenState extends State<TestingHistoryScreen> {
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: _kSurface,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 15, offset: const Offset(0, 5))],
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         children: [
@@ -167,9 +174,9 @@ class _TestingHistoryScreenState extends State<TestingHistoryScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              color: _kPrimary.withValues(alpha: 0.07),
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-              border: Border(bottom: BorderSide(color: Colors.green.shade100)),
+              color: _kPrimary.withValues(alpha: 0.06),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
+              border: const Border(bottom: BorderSide(color: Color(0xFFE2E8F0))),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -182,10 +189,16 @@ class _TestingHistoryScreenState extends State<TestingHistoryScreen> {
                       child: const Icon(Icons.person_rounded, size: 16, color: Colors.white),
                     ),
                     const SizedBox(width: 10),
-                    Text(petugas, style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w600, color: _kPrimary)),
+                    Text(
+                      petugas,
+                      style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.bold, color: const Color(0xFF1E293B)),
+                    ),
                   ],
                 ),
-                Text(_formatTimestamp(item['created_at']), style: GoogleFonts.poppins(fontSize: 11, color: _kTextSecondary)),
+                Text(
+                  _formatTimestamp(item['created_at']),
+                  style: GoogleFonts.poppins(fontSize: 11, color: _kTextSecondary, fontWeight: FontWeight.w500),
+                ),
               ],
             ),
           ),
@@ -198,16 +211,24 @@ class _TestingHistoryScreenState extends State<TestingHistoryScreen> {
               children: [
                 // Location Row
                 Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(color: Colors.green.shade50, borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.green.shade100)),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF8FAFC),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: const Color(0xFFE2E8F0)),
+                  ),
                   child: Row(
                     children: [
-                      Icon(Icons.location_on_outlined, size: 16, color: Colors.red.shade500),
+                      const Icon(Icons.location_on_rounded, size: 16, color: Color(0xFFDC2626)),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          'Lat: ${_formatCoordinate(lat)}, Lng: ${_formatCoordinate(lng)}  |  Alt: ${_formatAltitude(altitude)}',
-                          style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w500, color: const Color(0xFF1A1A1A)),
+                          '${_formatCoordinate(lat)}, ${_formatCoordinate(lng)}  •  ${_formatAltitude(altitude)}',
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: const Color(0xFF334155),
+                          ),
                         ),
                       ),
                     ],
@@ -216,50 +237,64 @@ class _TestingHistoryScreenState extends State<TestingHistoryScreen> {
                 const SizedBox(height: 14),
 
                 // Heavy Metals Predictions (Cr & Ni)
-                Text('ESTIMASI LOGAM BERAT (AI)', style: GoogleFonts.poppins(fontSize: 10, fontWeight: FontWeight.w700, color: _kTextSecondary, letterSpacing: 0.8)),
+                Text(
+                  'PREDIKSI LOGAM BERAT (AI)',
+                  style: GoogleFonts.poppins(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                    color: _kTextSecondary,
+                    letterSpacing: 0.8,
+                  ),
+                ),
                 const SizedBox(height: 8),
                 Row(
                   children: [
                     // Cr(VI) Card
                     Expanded(
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           color: const Color(0xFFE8F5EE),
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: _kPrimary.withValues(alpha: 0.2)),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: _kPrimary.withValues(alpha: 0.25)),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Cr(VI) Est.', style: GoogleFonts.poppins(fontSize: 10, fontWeight: FontWeight.w600, color: _kPrimary)),
+                            Text(
+                              'Cr(VI)',
+                              style: GoogleFonts.poppins(fontSize: 11, fontWeight: FontWeight.bold, color: _kPrimary),
+                            ),
                             const SizedBox(height: 2),
                             Text(
                               crVal != null ? '${_formatVal(crVal)} µg/L' : '-',
-                              style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.bold, color: _kPrimary),
+                              style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w800, color: _kPrimary),
                             ),
                           ],
                         ),
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 10),
                     // Ni Card
                     Expanded(
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           color: const Color(0xFFEEF2FF),
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: const Color(0xFF4338CA).withValues(alpha: 0.2)),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: const Color(0xFF4338CA).withValues(alpha: 0.25)),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Ni Est.', style: GoogleFonts.poppins(fontSize: 10, fontWeight: FontWeight.w600, color: const Color(0xFF4338CA))),
+                            Text(
+                              'Ni',
+                              style: GoogleFonts.poppins(fontSize: 11, fontWeight: FontWeight.bold, color: const Color(0xFF4338CA)),
+                            ),
                             const SizedBox(height: 2),
                             Text(
                               niVal != null ? '${_formatVal(niVal)} µg/L' : '-',
-                              style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.bold, color: const Color(0xFF4338CA)),
+                              style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w800, color: const Color(0xFF4338CA)),
                             ),
                           ],
                         ),
@@ -270,7 +305,15 @@ class _TestingHistoryScreenState extends State<TestingHistoryScreen> {
                 const SizedBox(height: 14),
 
                 // Physical Sensors Grid
-                Text('DETAIL PENGUKURAN SENSOR', style: GoogleFonts.poppins(fontSize: 10, fontWeight: FontWeight.w700, color: _kTextSecondary, letterSpacing: 0.8)),
+                Text(
+                  'DETAIL PENGUKURAN SENSOR',
+                  style: GoogleFonts.poppins(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                    color: _kTextSecondary,
+                    letterSpacing: 0.8,
+                  ),
+                ),
                 const SizedBox(height: 8),
                 GridView.count(
                   shrinkWrap: true,
@@ -278,14 +321,14 @@ class _TestingHistoryScreenState extends State<TestingHistoryScreen> {
                   crossAxisCount: 3,
                   mainAxisSpacing: 8,
                   crossAxisSpacing: 8,
-                  childAspectRatio: 2.2,
+                  childAspectRatio: 2.1,
                   children: [
-                    _buildGridItem('pH', _formatVal(item['ph']), Colors.indigo),
-                    _buildGridItem('TDS', '${_formatVal(item['tds'])} ppm', Colors.teal),
-                    _buildGridItem('EC', '${_formatVal(item['ec'])} mS', Colors.blueGrey),
-                    _buildGridItem('Suhu Air', '${_formatVal(item['suhu_air'])}°C', Colors.blue),
-                    _buildGridItem('Suhu Udara', '${_formatVal(item['suhu_lingkungan'])}°C', Colors.orange),
-                    _buildGridItem('Kelembapan', '${_formatVal(item['kelembapan'])}%', Colors.cyan),
+                    _buildGridItem('pH', _formatVal(item['ph']), const Color(0xFF0284C7)),
+                    _buildGridItem('TDS', '${_formatVal(item['tds'])} ppm', const Color(0xFF0EA5E9)),
+                    _buildGridItem('EC', '${_formatVal(item['ec'])} mS', const Color(0xFFD97706)),
+                    _buildGridItem('Suhu Air', '${_formatVal(item['suhu_air'])}°C', const Color(0xFF059669)),
+                    _buildGridItem('Suhu Udara', '${_formatVal(item['suhu_lingkungan'])}°C', const Color(0xFFEA580C)),
+                    _buildGridItem('Kelembapan', '${_formatVal(item['kelembapan'])}%', const Color(0xFF0D9488)),
                   ],
                 ),
               ],
@@ -293,28 +336,64 @@ class _TestingHistoryScreenState extends State<TestingHistoryScreen> {
           ),
         ],
       ),
-    ).animate().fade(duration: 400.ms).slideY(begin: 0.1, end: 0, curve: Curves.easeOut);
+    ).animate().fade(duration: 350.ms).slideY(begin: 0.05, end: 0, curve: Curves.easeOut);
   }
 
-  Widget _buildGridItem(String label, String value, MaterialColor color) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: GoogleFonts.poppins(fontSize: 10, color: _kTextSecondary, fontWeight: FontWeight.w500)),
-        Text(value, style: GoogleFonts.poppins(fontSize: 12, color: color.shade700, fontWeight: FontWeight.bold), overflow: TextOverflow.ellipsis),
-      ],
+  Widget _buildGridItem(String label, String value, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            label,
+            style: GoogleFonts.poppins(fontSize: 10, color: _kTextSecondary, fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            value,
+            style: GoogleFonts.poppins(fontSize: 12, color: color, fontWeight: FontWeight.bold),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildEmptyState() {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.science_outlined, size: 64, color: Colors.grey.shade300),
-          const SizedBox(height: 16),
-          Text('Belum ada data pengujian.', style: GoogleFonts.poppins(fontSize: 16, color: _kTextSecondary)),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: _kPrimary.withValues(alpha: 0.08),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(Icons.science_outlined, size: 54, color: _kPrimary),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Belum Ada Data Pengujian',
+              style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: const Color(0xFF1E293B)),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              'Data uji lapangan dari smartphone akan tersimpan di sini.',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.poppins(fontSize: 13, color: _kTextSecondary),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -326,14 +405,23 @@ class _TestingHistoryScreenState extends State<TestingHistoryScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.error_outline, size: 64, color: Colors.red.shade300),
+            Icon(Icons.error_outline_rounded, size: 54, color: Colors.red.shade400),
             const SizedBox(height: 16),
-            Text(_error ?? 'Terjadi kesalahan.', textAlign: TextAlign.center, style: GoogleFonts.poppins(fontSize: 14, color: _kTextSecondary)),
+            Text(
+              _error ?? 'Terjadi kesalahan.',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.poppins(fontSize: 14, color: _kTextSecondary),
+            ),
             const SizedBox(height: 24),
-            ElevatedButton(
+            ElevatedButton.icon(
               onPressed: () { setState(() => _isFirstLoad = true); _loadMore(); },
-              style: ElevatedButton.styleFrom(backgroundColor: _kPrimary, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-              child: const Text('Coba Lagi'),
+              icon: const Icon(Icons.refresh_rounded, size: 18),
+              label: const Text('Coba Lagi'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: _kPrimary,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
             ),
           ],
         ),
@@ -344,18 +432,31 @@ class _TestingHistoryScreenState extends State<TestingHistoryScreen> {
   Widget _buildRetryButton() {
     return Padding(
       padding: const EdgeInsets.all(24),
-      child: TextButton.icon(
-        onPressed: _loadMore,
-        icon: const Icon(Icons.refresh, size: 16, color: _kPrimary),
-        label: Text('Gagal memuat lebih banyak. Klik untuk ulangi.', style: GoogleFonts.poppins(color: _kPrimary)),
+      child: Center(
+        child: TextButton.icon(
+          onPressed: _loadMore,
+          icon: const Icon(Icons.refresh_rounded, size: 16, color: _kPrimary),
+          label: Text('Gagal memuat lebih banyak. Klik untuk ulangi.', style: GoogleFonts.poppins(color: _kPrimary, fontWeight: FontWeight.bold)),
+        ),
       ),
     );
   }
 
   Widget _buildEndOfList() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 32),
-      child: Center(child: Text('Seluruh riwayat pengujian telah ditampilkan', style: GoogleFonts.poppins(fontSize: 12, color: _kTextSecondary, fontWeight: FontWeight.w500))),
+      padding: const EdgeInsets.symmetric(vertical: 28),
+      child: Center(
+        child: Column(
+          children: [
+            Container(width: 32, height: 4, decoration: BoxDecoration(color: _kPrimary.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(2))),
+            const SizedBox(height: 8),
+            Text(
+              'Seluruh riwayat pengujian telah ditampilkan',
+              style: GoogleFonts.poppins(fontSize: 12, color: _kTextSecondary, fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

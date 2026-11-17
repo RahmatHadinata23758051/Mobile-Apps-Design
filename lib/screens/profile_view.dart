@@ -6,10 +6,10 @@ import 'package:hera/core/widgets/app_update_dialog.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-const _kPrimary = Color(0xFF2E7D32);
-const _kBackground = Color(0xFFF1F8F2);
+const _kPrimary = Color(0xFF006948);
+const _kBackground = Color(0xFFF4F7F5);
 const _kSurface = Color(0xFFFFFFFF);
-const _kTextSecondary = Color(0xFF6B7280);
+const _kTextSecondary = Color(0xFF5F6E65);
 
 class ProfileView extends StatefulWidget {
   final String? username;
@@ -177,7 +177,7 @@ class _ProfileViewState extends State<ProfileView> {
             width: double.infinity,
             padding: const EdgeInsets.fromLTRB(24, 32, 24, 48),
             decoration: const BoxDecoration(
-              gradient: LinearGradient(colors: [_kPrimary, Color(0xFF43A047)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+              gradient: LinearGradient(colors: [_kPrimary, Color(0xFF009664)], begin: Alignment.topLeft, end: Alignment.bottomRight),
               borderRadius: BorderRadius.only(bottomLeft: Radius.circular(32), bottomRight: Radius.circular(32)),
             ),
             child: Column(
@@ -567,13 +567,16 @@ class _ProfileViewState extends State<ProfileView> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 10, offset: const Offset(0, 4))],
-        border: Border.all(color: Colors.green.shade50, width: 1.5),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(color: Colors.green.shade50, borderRadius: BorderRadius.circular(12)),
+            decoration: BoxDecoration(
+              color: _kPrimary.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(12),
+            ),
             child: Icon(icon, color: _kPrimary, size: 20),
           ),
           const SizedBox(width: 16),
@@ -583,7 +586,7 @@ class _ProfileViewState extends State<ProfileView> {
               children: [
                 Text(label, style: GoogleFonts.poppins(fontSize: 11, fontWeight: FontWeight.w500, color: _kTextSecondary)),
                 const SizedBox(height: 2),
-                Text(value, maxLines: 2, overflow: TextOverflow.ellipsis, style: GoogleFonts.poppins(fontSize: 15, fontWeight: FontWeight.w600, color: const Color(0xFF1A1A1A))),
+                Text(value, maxLines: 2, overflow: TextOverflow.ellipsis, style: GoogleFonts.poppins(fontSize: 15, fontWeight: FontWeight.w600, color: const Color(0xFF1E293B))),
               ],
             ),
           ),
