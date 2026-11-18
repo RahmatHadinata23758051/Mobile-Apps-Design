@@ -997,33 +997,39 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 ],
               ),
               child: Padding(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(
-                          Icons.table_chart_outlined,
-                          color: Color(0xFF006948),
-                          size: 20,
+                        const Padding(
+                          padding: EdgeInsets.only(top: 2),
+                          child: Icon(
+                            Icons.table_chart_outlined,
+                            color: Color(0xFF006948),
+                            size: 20,
+                          ),
                         ),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
+                              Wrap(
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                spacing: 6,
+                                runSpacing: 4,
                                 children: [
                                   Text(
                                     "Laporan Historis",
                                     style: GoogleFonts.poppins(
-                                      fontSize: 16,
+                                      fontSize: 15,
                                       fontWeight: FontWeight.bold,
                                       color: const Color(0xFF006948),
                                     ),
                                   ),
-                                  const SizedBox(width: 6),
                                   Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                     decoration: BoxDecoration(
@@ -1041,10 +1047,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                   ),
                                 ],
                               ),
-                              Row(
+                              const SizedBox(height: 3),
+                              Wrap(
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                spacing: 4,
+                                runSpacing: 2,
                                 children: [
                                   Text(
-                                    "Log periodik sensor otomatis  •  ",
+                                    "Log sensor otomatis",
                                     style: GoogleFonts.poppins(
                                       fontSize: 11,
                                       color: const Color(0xFF5F6E65),
@@ -1053,7 +1063,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                   GestureDetector(
                                     onTap: () => Navigator.pushNamed(context, '/history'),
                                     child: Text(
-                                      "Lihat Semua >",
+                                      "• Lihat Semua >",
                                       style: GoogleFonts.poppins(
                                         fontSize: 11,
                                         fontWeight: FontWeight.bold,
@@ -1066,7 +1076,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                             ],
                           ),
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: 6),
                         DropdownButton<int>(
                           value: _selectedHistoryRows,
                           borderRadius: BorderRadius.circular(12),
@@ -1274,33 +1284,39 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 ],
               ),
               child: Padding(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(
-                          Icons.location_on_outlined,
-                          color: const Color(0xFF006948),
-                          size: 22,
+                        const Padding(
+                          padding: EdgeInsets.only(top: 2),
+                          child: Icon(
+                            Icons.location_on_outlined,
+                            color: Color(0xFF006948),
+                            size: 22,
+                          ),
                         ),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
+                              Wrap(
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                spacing: 6,
+                                runSpacing: 4,
                                 children: [
                                   Text(
                                     "Data Pengujian Lapangan",
                                     style: GoogleFonts.poppins(
-                                      fontSize: 16,
+                                      fontSize: 15,
                                       fontWeight: FontWeight.bold,
                                       color: const Color(0xFF006948),
                                     ),
                                   ),
-                                  const SizedBox(width: 6),
                                   Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                     decoration: BoxDecoration(
@@ -1318,10 +1334,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                   ),
                                 ],
                               ),
-                              Row(
+                              const SizedBox(height: 3),
+                              Wrap(
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                spacing: 4,
+                                runSpacing: 2,
                                 children: [
                                   Text(
-                                    "Hasil sampel uji petugas  •  ",
+                                    "Hasil sampel uji petugas",
                                     style: GoogleFonts.poppins(
                                       fontSize: 11,
                                       color: const Color(0xFF5F6E65),
@@ -1334,7 +1354,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                                           '/testing-history',
                                         ),
                                     child: Text(
-                                      "Lihat Semua >",
+                                      "• Lihat Semua >",
                                       style: GoogleFonts.poppins(
                                         fontSize: 11,
                                         fontWeight: FontWeight.bold,
@@ -1347,7 +1367,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                             ],
                           ),
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: 6),
                         DropdownButton<int>(
                           value: _selectedTestingRows,
                           borderRadius: BorderRadius.circular(12),
