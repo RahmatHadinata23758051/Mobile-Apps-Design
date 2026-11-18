@@ -8,8 +8,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:hera/core/network/auth_storage.dart';
-import 'package:hera/core/models/sensor_history_result.dart';
-import 'package:hera/core/models/testing_history_result.dart';
 import 'package:hera/core/models/sensor_reading.dart';
 import 'package:hera/core/services/auth_service.dart';
 import 'package:hera/core/services/location_security_service.dart';
@@ -241,60 +239,82 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   Future<void> _loadSensorSummary({bool showLoader = true}) async {
     if (_isLoadingApiSummary) return;
-    if (showLoader) {
+    if (showLoader && _historyRows.isEmpty) {
       setState(() {
         _isLoadingApiSummary = true;
         _historyErrorMessage = null;
       });
     }
 
+    // 1. Fetch Latest sensor count
     try {
-      final results = await Future.wait<Object>([
-        _sensorService.fetchLatest(),
-        _sensorService.fetchAlerts(),
-        _sensorService.fetchHistory(
-          limit: _selectedHistoryRows,
-          source: 'postgres',
-        ),
-        _testService.fetchTestingHistory(limit: _selectedTestingRows),
-      ]);
-
-      if (!mounted) return;
-
-      final latest = results[0] as List<SensorReading>;
-      final alerts = results[1] as List<SensorReading>;
-      final historyResult = results[2] as SensorHistoryResult;
-      final testingHistoryResult = results[3] as TestingHistoryResult;
-
-      setState(() {
-        _latestCount = latest.length;
-        _alertsCount = alerts.length;
-        _historyCount = historyResult.items.length;
-        _historyRows = historyResult.items;
-        _testingHistoryRows = testingHistoryResult.items;
-      });
+      final latest = await _sensorService.fetchLatest();
+      if (mounted) {
+        setState(() {
+          _latestCount = latest.length;
+        });
+      }
     } on UnauthorizedException catch (e) {
       if (!mounted) return;
       _showApiError(e.message);
       Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
-    } on ApiException catch (e) {
-      if (!mounted) return;
-      _showApiError(e.message);
-      setState(() {
-        _historyErrorMessage = e.message;
-      });
-    } catch (_) {
-      if (!mounted) return;
-      _showApiError('Terjadi kesalahan saat memuat data sensor.');
-      setState(() {
-        _historyErrorMessage = 'Terjadi kesalahan saat memuat histori data.';
-      });
-    } finally {
+      return;
+    } catch (e) {
+      debugPrint('[HomeScreen] fetchLatest warning: $e');
+    }
+
+    // 2. Fetch Alerts count
+    try {
+      final alerts = await _sensorService.fetchAlerts();
       if (mounted) {
         setState(() {
-          _isLoadingApiSummary = false;
+          _alertsCount = alerts.length;
         });
       }
+    } catch (e) {
+      debugPrint('[HomeScreen] fetchAlerts warning: $e');
+    }
+
+    // 3. Fetch History sensor rows (Laporan Historis)
+    try {
+      final historyResult = await _sensorService.fetchHistory(
+        limit: _selectedHistoryRows,
+        source: 'postgres',
+      );
+      if (mounted) {
+        setState(() {
+          _historyCount = historyResult.items.length;
+          _historyRows = historyResult.items;
+          _historyErrorMessage = null;
+        });
+      }
+    } catch (e) {
+      debugPrint('[HomeScreen] fetchHistory error: $e');
+      if (mounted && _historyRows.isEmpty) {
+        setState(() {
+          _historyErrorMessage = e is ApiException ? e.message : 'Gagal memuat histori data sensor.';
+        });
+      }
+    }
+
+    // 4. Fetch Field Testing history (Data Pengujian Lapangan)
+    try {
+      final testingHistoryResult = await _testService.fetchTestingHistory(
+        limit: _selectedTestingRows,
+      );
+      if (mounted) {
+        setState(() {
+          _testingHistoryRows = testingHistoryResult.items;
+        });
+      }
+    } catch (e) {
+      debugPrint('[HomeScreen] fetchTestingHistory error: $e');
+    }
+
+    if (mounted) {
+      setState(() {
+        _isLoadingApiSummary = false;
+      });
     }
   }
 
@@ -1113,12 +1133,26 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                           color: Colors.black45,
                         ),
                       )
-                    else if (_historyErrorMessage != null)
-                      Text(
-                        _historyErrorMessage!,
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          color: Colors.red.shade400,
+                    else if (_historyErrorMessage != null && _historyRows.isEmpty)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                _historyErrorMessage!,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 13,
+                                  color: Colors.red.shade600,
+                                ),
+                              ),
+                            ),
+                            TextButton.icon(
+                              onPressed: () => _loadSensorSummary(showLoader: true),
+                              icon: const Icon(Icons.refresh, size: 16),
+                              label: const Text('Coba Lagi'),
+                            ),
+                          ],
                         ),
                       )
                     else if (_historyRows.isEmpty)

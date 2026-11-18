@@ -19,6 +19,10 @@ class SensorService {
       if (e.response?.statusCode == 401) {
         throw const UnauthorizedException();
       }
+      if (e.response?.statusCode == 404) {
+        // 404 hanya menandakan belum ada data sensor yang masuk, bukan fatal error.
+        return <SensorReading>[];
+      }
       throw ApiException(
         _extractErrorMessage(e, fallback: 'Gagal memuat data latest sensor.'),
       );
@@ -32,6 +36,9 @@ class SensorService {
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
         throw const UnauthorizedException();
+      }
+      if (e.response?.statusCode == 404) {
+        return <SensorReading>[];
       }
       throw ApiException(
         _extractErrorMessage(e, fallback: 'Gagal memuat data alert sensor.'),
