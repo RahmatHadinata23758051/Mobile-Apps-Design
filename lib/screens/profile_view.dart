@@ -133,7 +133,7 @@ class _ProfileViewState extends State<ProfileView> {
         backgroundColor: _kPrimary,
         elevation: 0,
         leading: IconButton(icon: const Icon(Icons.arrow_back_rounded, color: Colors.white), onPressed: () => Navigator.pop(context)),
-        title: Text("Profil Pengguna", style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20)),
+        title: Text("Profil Akun", style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 18)),
         centerTitle: true,
       ),
       body: _buildBody(),

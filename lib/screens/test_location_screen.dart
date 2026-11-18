@@ -119,7 +119,7 @@ class _TestLocationScreenState extends State<TestLocationScreen> {
   }
 
   Future<void> _fetchAndSendTestData() async {
-    setState(() { _isLoading = true; _statusMessage = "Memvalidasi keamanan lokasi..."; _statusColor = _kPrimary; });
+    setState(() { _isLoading = true; _statusMessage = "Memvalidasi lokasi & membaca sensor..."; _statusColor = _kPrimary; });
 
     try {
       final position = await _resolveCurrentPosition();
@@ -144,10 +144,12 @@ class _TestLocationScreenState extends State<TestLocationScreen> {
       if (mounted) {
         setState(() {
           final baseMessage = response['message']?.toString() ?? "Data pengujian berhasil terekam!";
-          _statusMessage = altitudeMissing ? "$baseMessage (Altitude dipaksa lewat emulator)" : baseMessage;
+          _statusMessage = altitudeMissing ? "$baseMessage (Altitude diestimasi)" : baseMessage;
           _statusColor = Colors.green.shade600;
         });
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(_statusMessage), backgroundColor: Colors.green.shade700));
+
+        final data = response['data'] is Map<String, dynamic> ? response['data'] as Map<String, dynamic> : null;
+        _showSuccessRecordDialog(data);
       }
     } on UnauthorizedException {
       await AuthService().clearLocalSession();
@@ -156,13 +158,201 @@ class _TestLocationScreenState extends State<TestLocationScreen> {
     } on ApiException catch (e) {
       if (mounted) {
         setState(() { _statusMessage = e.message; _statusColor = Colors.red.shade600; });
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message), backgroundColor: Colors.red.shade700));
+        _showErrorDialog(e.message);
       }
     } catch (e) {
-      if (mounted) setState(() { _statusMessage = "Kesalahan integrasi: $e"; _statusColor = Colors.red.shade600; });
+      if (mounted) {
+        final errMsg = "Kesalahan integrasi: $e";
+        setState(() { _statusMessage = errMsg; _statusColor = Colors.red.shade600; });
+        _showErrorDialog(errMsg);
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
+  }
+
+  void _showSuccessRecordDialog(Map<String, dynamic>? data) {
+    final lat = data?['latitude']?.toString() ?? _latitude?.toStringAsFixed(6) ?? '-';
+    final lng = data?['longitude']?.toString() ?? _longitude?.toStringAsFixed(6) ?? '-';
+    final alt = data?['altitude'] != null ? '${data!['altitude']} m' : (_altitude != null ? '${_altitude!.toStringAsFixed(2)} m' : '-');
+    final crVal = data?['cr_estimated'] != null ? double.tryParse(data!['cr_estimated'].toString())?.toStringAsFixed(3) : _latestReading?.crEstimated?.toStringAsFixed(3) ?? '-';
+    final niVal = data?['ni_estimated'] != null ? double.tryParse(data!['ni_estimated'].toString())?.toStringAsFixed(3) : _latestReading?.niEstimated?.toStringAsFixed(3) ?? '-';
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogCtx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        contentPadding: const EdgeInsets.all(20),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE6F4EA),
+                shape: BoxShape.circle,
+                border: Border.all(color: _kPrimary.withValues(alpha: 0.2), width: 2),
+              ),
+              child: const Icon(Icons.check_circle_rounded, color: _kPrimary, size: 44),
+            ),
+            const SizedBox(height: 14),
+            Text(
+              "Pengujian Lapangan Berhasil!",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: const Color(0xFF1E293B)),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              "Data uji sampel GPS berhasil disimpan ke server dan masuk ke menu Data Pengujian Lapangan.",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.poppins(fontSize: 12, color: _kTextSecondary),
+            ),
+            const SizedBox(height: 16),
+
+            // Summary Card
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF8FAFC),
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: const Color(0xFFE2E8F0)),
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.pin_drop_rounded, size: 16, color: Color(0xFFDC2626)),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(
+                          "$lat, $lng ($alt)",
+                          style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w600, color: const Color(0xFF334155)),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Divider(height: 16, color: Color(0xFFE2E8F0)),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Cr(VI) Est. (AI)", style: GoogleFonts.poppins(fontSize: 10, fontWeight: FontWeight.w600, color: _kPrimary)),
+                            Text("$crVal µg/L", style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.bold, color: const Color(0xFF1E293B))),
+                          ],
+                        ),
+                      ),
+                      Container(width: 1, height: 28, color: const Color(0xFFE2E8F0)),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Ni Est. (AI)", style: GoogleFonts.poppins(fontSize: 10, fontWeight: FontWeight.w600, color: const Color(0xFF4338CA))),
+                            Text("$niVal µg/L", style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.bold, color: const Color(0xFF1E293B))),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 18),
+
+            // Action Buttons
+            SizedBox(
+              width: double.infinity,
+              height: 46,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.pop(dialogCtx);
+                  Navigator.pushReplacementNamed(context, '/testing-history');
+                },
+                icon: const Icon(Icons.assignment_turned_in_rounded, size: 18),
+                label: Text("Lihat di Data Pengujian", style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.bold)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: _kPrimary,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  elevation: 0,
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            SizedBox(
+              width: double.infinity,
+              height: 42,
+              child: OutlinedButton(
+                onPressed: () {
+                  Navigator.pop(dialogCtx);
+                  Navigator.pop(context, true);
+                },
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: Color(0xFFCBD5E1)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                child: Text("Kembali ke Dashboard", style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w600, color: const Color(0xFF64748B))),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (dialogCtx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        contentPadding: const EdgeInsets.all(20),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFEF2F2),
+                shape: BoxShape.circle,
+                border: Border.all(color: const Color(0xFFEF4444).withValues(alpha: 0.2), width: 2),
+              ),
+              child: const Icon(Icons.error_outline_rounded, color: Color(0xFFDC2626), size: 44),
+            ),
+            const SizedBox(height: 14),
+            Text(
+              "Gagal Menyimpan Data",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: const Color(0xFF1E293B)),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.poppins(fontSize: 12, color: const Color(0xFF64748B)),
+            ),
+            const SizedBox(height: 18),
+            SizedBox(
+              width: double.infinity,
+              height: 44,
+              child: ElevatedButton(
+                onPressed: () => Navigator.pop(dialogCtx),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFDC2626),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  elevation: 0,
+                ),
+                child: Text("Tutup & Coba Lagi", style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.bold)),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   double? _resolveAltitude(double? rawAltitude) {
@@ -271,8 +461,8 @@ class _TestLocationScreenState extends State<TestLocationScreen> {
       appBar: AppBar(
         backgroundColor: _kPrimary,
         title: Text(
-          "Pengujian Lapangan",
-          style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 18),
+          "Pengujian Lapangan (GPS)",
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 17),
         ),
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.white),
@@ -287,6 +477,56 @@ class _TestLocationScreenState extends State<TestLocationScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                // Educational / Provenance Banner
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(14 * scale),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE6F4EA),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: _kPrimary.withValues(alpha: 0.25)),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(6 * scale),
+                        decoration: BoxDecoration(
+                          color: _kPrimary.withValues(alpha: 0.15),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(Icons.pin_drop_rounded, size: 20 * scale, color: _kPrimary),
+                      ),
+                      SizedBox(width: 12 * scale),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Pengambilan Sampel GPS Petugas",
+                              style: GoogleFonts.poppins(
+                                fontSize: 12 * scale,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFF004D34),
+                              ),
+                            ),
+                            SizedBox(height: 2 * scale),
+                            Text(
+                              "Titik GPS dan pembacaan sensor pada form ini akan disimpan ke menu \"Data Pengujian Lapangan\" serta diestimasi kadar logam beratnya oleh AI.",
+                              style: GoogleFonts.poppins(
+                                fontSize: 11 * scale,
+                                color: const Color(0xFF004D34).withValues(alpha: 0.9),
+                                height: 1.35,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 16 * scale),
+
                 // Sensor Section Header Banner
                 Container(
                   width: double.infinity,
@@ -523,8 +763,8 @@ class _TestLocationScreenState extends State<TestLocationScreen> {
                           )
                         : Icon(Icons.cloud_upload_rounded, size: 20 * scale),
                     label: Text(
-                      _isLoading ? "Merekam Validasi..." : "Simpan Data Pengujian",
-                      style: GoogleFonts.poppins(fontSize: 15 * scale, fontWeight: FontWeight.bold),
+                      _isLoading ? "Merekam ke Server..." : "Simpan ke Data Pengujian Lapangan",
+                      style: GoogleFonts.poppins(fontSize: 14 * scale, fontWeight: FontWeight.bold),
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: _kPrimary,

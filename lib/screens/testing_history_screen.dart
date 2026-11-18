@@ -104,44 +104,148 @@ class _TestingHistoryScreenState extends State<TestingHistoryScreen> {
     return '${number.toStringAsFixed(2)} m';
   }
 
+  Future<void> _refresh() async {
+    setState(() {
+      _items.clear();
+      _nextCursor = null;
+      _hasMore = true;
+      _isFirstLoad = true;
+    });
+    await _loadMore();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: _kBackground,
       appBar: AppBar(
         backgroundColor: _kPrimary,
-        title: Text('Histori Pengujian GPS', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white)),
+        title: Text(
+          'Data Pengujian Lapangan',
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 17),
+        ),
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.white),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh_rounded),
+            tooltip: 'Segarkan Data',
+            onPressed: _refresh,
+          ),
+        ],
       ),
       body: _buildContent(),
     );
   }
 
   Widget _buildContent() {
-    if (_isFirstLoad && _isLoading) return Center(child: CircularProgressIndicator(color: _kPrimary));
+    if (_isFirstLoad && _isLoading) return const Center(child: CircularProgressIndicator(color: _kPrimary));
     if (_error != null && _items.isEmpty) return _buildErrorState();
     if (_items.isEmpty && !_isLoading) return _buildEmptyState();
 
     return RefreshIndicator(
       color: _kPrimary,
-      onRefresh: () async {
-        setState(() { _items.clear(); _nextCursor = null; _hasMore = true; _isFirstLoad = true; });
-        await _loadMore();
-      },
+      onRefresh: _refresh,
       child: ListView.builder(
         controller: _scrollController,
         padding: const EdgeInsets.all(16),
         physics: const AlwaysScrollableScrollPhysics(),
-        itemCount: _items.length + 1,
+        itemCount: _items.length + 2, // 1 for provenance header, items, 1 for footer
         itemBuilder: (context, index) {
-          if (index < _items.length) return _buildTestCard(_items[index]);
+          if (index == 0) {
+            return _buildProvenanceHeader();
+          }
+          final itemIndex = index - 1;
+          if (itemIndex < _items.length) {
+            return _buildTestCard(_items[itemIndex]);
+          }
           if (_hasMore) {
             if (_error != null) return _buildRetryButton();
-            return Padding(padding: const EdgeInsets.symmetric(vertical: 32), child: Center(child: CircularProgressIndicator(color: _kPrimary)));
+            return const Padding(
+              padding: EdgeInsets.symmetric(vertical: 32),
+              child: Center(child: CircularProgressIndicator(color: _kPrimary)),
+            );
           }
           return _buildEndOfList();
         },
+      ),
+    );
+  }
+
+  Widget _buildProvenanceHeader() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: _kSurface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFEF3C7), // Amber 100
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Icon(Icons.pin_drop_rounded, size: 24, color: Color(0xFFD97706)),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFD97706).withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        "HASIL UJI GPS PETUGAS",
+                        style: GoogleFonts.poppins(
+                          fontSize: 9.5,
+                          fontWeight: FontWeight.w700,
+                          color: const Color(0xFFB45309),
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  "Data Pengujian Lapangan",
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF1E293B),
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  "Daftar sampel yang disimpan oleh petugas melalui tombol Pengujian Lapangan (GPS). Tersinkronisasi dengan menu Laporan di website.",
+                  style: GoogleFonts.poppins(
+                    fontSize: 11.5,
+                    color: _kTextSecondary,
+                    height: 1.35,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -376,21 +480,33 @@ class _TestingHistoryScreenState extends State<TestingHistoryScreen> {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: _kPrimary.withValues(alpha: 0.08),
+                color: const Color(0xFFFEF3C7),
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.science_outlined, size: 54, color: _kPrimary),
+              child: const Icon(Icons.pin_drop_outlined, size: 54, color: Color(0xFFD97706)),
             ),
             const SizedBox(height: 16),
             Text(
-              'Belum Ada Data Pengujian',
+              'Belum Ada Data Pengujian Lapangan',
               style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: const Color(0xFF1E293B)),
             ),
             const SizedBox(height: 6),
             Text(
-              'Data uji lapangan dari smartphone akan tersimpan di sini.',
+              'Data uji lapangan akan tersimpan di sini setelah petugas menekan tombol "Simpan ke Data Pengujian Lapangan" pada menu Pengujian Lapangan (GPS).',
               textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(fontSize: 13, color: _kTextSecondary),
+              style: GoogleFonts.poppins(fontSize: 12.5, color: _kTextSecondary, height: 1.4),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton.icon(
+              onPressed: () => Navigator.pushNamed(context, '/test_location'),
+              icon: const Icon(Icons.add_location_alt_rounded, size: 18),
+              label: Text("Uji Titik Baru Sekarang", style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.bold)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: _kPrimary,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
             ),
           ],
         ),

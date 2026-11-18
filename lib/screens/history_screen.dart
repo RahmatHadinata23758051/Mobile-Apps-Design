@@ -81,15 +81,35 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   String _formatVal(double? v) => v?.toStringAsFixed(2) ?? '-';
 
+  Future<void> _refresh() async {
+    setState(() {
+      _items.clear();
+      _nextCursor = null;
+      _hasMore = true;
+      _isFirstLoad = true;
+    });
+    await _loadMore();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: _kBackground,
       appBar: AppBar(
         backgroundColor: _kPrimary,
-        title: Text('Histori Data Sensor', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white)),
+        title: Text(
+          'Laporan Historis',
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 17),
+        ),
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.white),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh_rounded),
+            tooltip: 'Segarkan Data',
+            onPressed: _refresh,
+          ),
+        ],
       ),
       body: _buildContent(),
     );
@@ -97,30 +117,114 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   Widget _buildContent() {
     if (_isFirstLoad && _isLoading) {
-      return Center(child: CircularProgressIndicator(color: _kPrimary));
+      return const Center(child: CircularProgressIndicator(color: _kPrimary));
     }
     if (_error != null && _items.isEmpty) return _buildErrorState();
     if (_items.isEmpty && !_isLoading) return _buildEmptyState();
 
     return RefreshIndicator(
       color: _kPrimary,
-      onRefresh: () async {
-        setState(() { _items.clear(); _nextCursor = null; _hasMore = true; _isFirstLoad = true; });
-        await _loadMore();
-      },
+      onRefresh: _refresh,
       child: ListView.builder(
         controller: _scrollController,
         padding: const EdgeInsets.all(16),
         physics: const AlwaysScrollableScrollPhysics(),
-        itemCount: _items.length + (_hasMore ? 1 : 1),
+        itemCount: _items.length + 2, // 1 for provenance header, items, 1 for footer
         itemBuilder: (context, index) {
-          if (index < _items.length) return _buildHistoryCard(_items[index]);
+          if (index == 0) {
+            return _buildProvenanceHeader();
+          }
+          final itemIndex = index - 1;
+          if (itemIndex < _items.length) {
+            return _buildHistoryCard(_items[itemIndex]);
+          }
           if (_hasMore) {
             if (_error != null) return _buildRetryButton();
-            return Padding(padding: const EdgeInsets.symmetric(vertical: 32), child: Center(child: CircularProgressIndicator(color: _kPrimary)));
+            return const Padding(
+              padding: EdgeInsets.symmetric(vertical: 32),
+              child: Center(child: CircularProgressIndicator(color: _kPrimary)),
+            );
           }
           return _buildEndOfList();
         },
+      ),
+    );
+  }
+
+  Widget _buildProvenanceHeader() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: _kSurface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: const Color(0xFFEEF2FF), // Indigo 50
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Icon(Icons.ssid_chart_rounded, size: 24, color: Color(0xFF4338CA)),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF4338CA).withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        "LOG OTOMATIS - NODE SENSOR IOT",
+                        style: GoogleFonts.poppins(
+                          fontSize: 9.5,
+                          fontWeight: FontWeight.w700,
+                          color: const Color(0xFF4338CA),
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  "Laporan Historis Telemetri",
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF1E293B),
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  "Log data berkala dari node sensor otomatis yang terpasang di sungai. Bersumber langsung dari PostgreSQL & InfluxDB.",
+                  style: GoogleFonts.poppins(
+                    fontSize: 11.5,
+                    color: _kTextSecondary,
+                    height: 1.35,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -292,21 +396,21 @@ class _HistoryScreenState extends State<HistoryScreen> {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: _kPrimary.withValues(alpha: 0.08),
+                color: const Color(0xFFEEF2FF),
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.history_rounded, size: 54, color: _kPrimary),
+              child: const Icon(Icons.ssid_chart_rounded, size: 54, color: Color(0xFF4338CA)),
             ),
             const SizedBox(height: 16),
             Text(
-              'Belum Ada Histori Data',
+              'Belum Ada Laporan Historis Sensor',
               style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: const Color(0xFF1E293B)),
             ),
             const SizedBox(height: 6),
             Text(
-              'Data telemetri dari sensor IoT akan tersimpan di sini.',
+              'Data telemetri otomatis dari perangkat node sensor IoT di sungai akan tercatat secara berkala di sini.',
               textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(fontSize: 13, color: _kTextSecondary),
+              style: GoogleFonts.poppins(fontSize: 12.5, color: _kTextSecondary, height: 1.4),
             ),
           ],
         ),

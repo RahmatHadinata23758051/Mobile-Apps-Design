@@ -628,14 +628,22 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     children: [
                       _buildDrawerItem(
-                        icon: Icons.dashboard_outlined,
+                        icon: Icons.dashboard_rounded,
                         title: "Dashboard",
                         isActive: true,
                         onTap: () => Navigator.pop(context),
                       ),
                       _buildDrawerItem(
-                        icon: Icons.science_outlined,
-                        title: "Pengujian",
+                        icon: Icons.show_chart_rounded,
+                        title: "Monitoring Telemetri",
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const MonitoringScreen()));
+                        },
+                      ),
+                      _buildDrawerItem(
+                        icon: Icons.pin_drop_rounded,
+                        title: "Pengujian Lapangan (GPS)",
                         onTap: () async {
                           Navigator.pop(context);
                           await Navigator.pushNamed(context, '/test_location');
@@ -644,16 +652,24 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                         },
                       ),
                       _buildDrawerItem(
-                        icon: Icons.show_chart_rounded,
-                        title: "Monitoring",
+                        icon: Icons.ssid_chart_rounded,
+                        title: "Laporan Historis",
                         onTap: () {
                           Navigator.pop(context);
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const MonitoringScreen()));
+                          Navigator.pushNamed(context, '/history');
                         },
                       ),
                       _buildDrawerItem(
-                        icon: Icons.person_outline,
-                        title: "Profil",
+                        icon: Icons.assignment_turned_in_rounded,
+                        title: "Data Pengujian Lapangan",
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.pushNamed(context, '/testing-history');
+                        },
+                      ),
+                      _buildDrawerItem(
+                        icon: Icons.person_rounded,
+                        title: "Profil Akun",
                         onTap: () {
                           Navigator.pop(context);
                           Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileView(username: _username, email: _email)));
@@ -908,9 +924,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            "Ringkasan Sensor API",
+                            "Ringkasan Monitoring Telemetri",
                             style: GoogleFonts.poppins(
-                              fontSize: 18,
+                              fontSize: 17,
                               fontWeight: FontWeight.bold,
                               color: const Color(0xFF006948),
                             ),
@@ -997,24 +1013,55 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "Historis Data Sensor",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: const Color(0xFF006948),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () => Navigator.pushNamed(context, '/history'),
-                                child: Text(
-                                  "Lihat Semua >",
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w600,
-                                    color: Color(0xFF009664),
+                              Row(
+                                children: [
+                                  Text(
+                                    "Laporan Historis",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: const Color(0xFF006948),
+                                    ),
                                   ),
-                                ),
+                                  const SizedBox(width: 6),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF4338CA).withValues(alpha: 0.1),
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: Text(
+                                      "NODE IOT",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 9,
+                                        fontWeight: FontWeight.w700,
+                                        color: const Color(0xFF4338CA),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "Log periodik sensor otomatis  •  ",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 11,
+                                      color: const Color(0xFF5F6E65),
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () => Navigator.pushNamed(context, '/history'),
+                                    child: Text(
+                                      "Lihat Semua >",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.bold,
+                                        color: const Color(0xFF009664),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
@@ -1243,28 +1290,59 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "Histori Pengujian",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.bold,
-                                  color: const Color(0xFF006948),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap:
-                                    () => Navigator.pushNamed(
-                                      context,
-                                      '/testing-history',
+                              Row(
+                                children: [
+                                  Text(
+                                    "Data Pengujian Lapangan",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: const Color(0xFF006948),
                                     ),
-                                child: Text(
-                                  "Lihat Semua >",
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w600,
-                                    color: const Color(0xFF006948),
                                   ),
-                                ),
+                                  const SizedBox(width: 6),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFD97706).withValues(alpha: 0.12),
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: Text(
+                                      "UJI GPS",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 9,
+                                        fontWeight: FontWeight.w700,
+                                        color: const Color(0xFFB45309),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "Hasil sampel uji petugas  •  ",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 11,
+                                      color: const Color(0xFF5F6E65),
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap:
+                                        () => Navigator.pushNamed(
+                                          context,
+                                          '/testing-history',
+                                        ),
+                                    child: Text(
+                                      "Lihat Semua >",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.bold,
+                                        color: const Color(0xFF009664),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
@@ -1529,9 +1607,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   Widget _buildQuickActions() {
     final actions = [
       _QuickActionItem(
-        title: 'Monitoring',
-        subtitle: 'Sensor & AI Cr/Ni',
-        icon: Icons.analytics_rounded,
+        title: 'Monitoring Telemetri',
+        subtitle: 'Live Sensor & AI',
+        icon: Icons.sensors_rounded,
         color: const Color(0xFF006948),
         onTap: () {
           Navigator.push(
@@ -1541,10 +1619,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         },
       ),
       _QuickActionItem(
-        title: 'Uji Lokasi',
-        subtitle: 'Pengujian Baru',
-        icon: Icons.add_location_alt_rounded,
-        color: const Color(0xFF0284C7),
+        title: 'Pengujian Lapangan',
+        subtitle: 'Sampel GPS Baru',
+        icon: Icons.pin_drop_rounded,
+        color: const Color(0xFFD97706),
         onTap: () async {
           await Navigator.pushNamed(context, '/test_location');
           if (!mounted || _isDisposed) return;
@@ -1552,17 +1630,17 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         },
       ),
       _QuickActionItem(
-        title: 'Histori Sensor',
-        subtitle: 'Log Raw Sensor',
+        title: 'Laporan Historis',
+        subtitle: 'Log Sensor Otomatis',
         icon: Icons.ssid_chart_rounded,
         color: const Color(0xFF4338CA),
         onTap: () => Navigator.pushNamed(context, '/history'),
       ),
       _QuickActionItem(
-        title: 'Data Laporan',
-        subtitle: 'Histori Lapangan',
-        icon: Icons.assignment_rounded,
-        color: const Color(0xFFD97706),
+        title: 'Data Pengujian',
+        subtitle: 'Hasil Uji GPS Petugas',
+        icon: Icons.assignment_turned_in_rounded,
+        color: const Color(0xFF0D9488),
         onTap: () => Navigator.pushNamed(context, '/testing-history'),
       ),
     ];
